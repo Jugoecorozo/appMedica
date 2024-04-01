@@ -6,20 +6,22 @@ import 'package:intl/intl.dart';
 
 class datosPersonales extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _nombreController = TextEditingController();
-  TextEditingController _fechaNacimientoController = TextEditingController();
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _fechaNacimientoController = TextEditingController();
   String _sexo = 'Masculino';
-  TextEditingController _pesoController = TextEditingController();
-  TextEditingController _tallaController = TextEditingController();
+  final TextEditingController _pesoController = TextEditingController();
+  final TextEditingController _tallaController = TextEditingController();
 
-  RegExp _onlyLetters = RegExp(r'^[a-zA-Z ]+$');
-  RegExp _onlyNumbers = RegExp(r'^[0-9.]+$');
+  final RegExp _onlyLetters = RegExp(r'^[a-zA-Z ]+$');
+  final RegExp _onlyNumbers = RegExp(r'^[0-9.]+$');
+
+  datosPersonales({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Datos Personales'),
+        title: const Text('Datos Personales'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -31,7 +33,7 @@ class datosPersonales extends StatelessWidget {
               children: [
                 TextFormField(
                   controller: _nombreController,
-                  decoration: InputDecoration(labelText: 'Nombre'),
+                  decoration: const InputDecoration(labelText: 'Nombre'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Por favor ingresa un nombre';
@@ -41,10 +43,10 @@ class datosPersonales extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _fechaNacimientoController,
-                  decoration: InputDecoration(labelText: 'Fecha de Nacimiento'),
+                  decoration: const InputDecoration(labelText: 'Fecha de Nacimiento'),
                   onTap: () async {
                     DateTime? pickedDate = await showDatePicker(
                       context: context,
@@ -61,7 +63,7 @@ class datosPersonales extends StatelessWidget {
                   },
                   readOnly: true,
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 DropdownButtonFormField(
                   value: _sexo,
                   onChanged: (value) {
@@ -74,13 +76,13 @@ class datosPersonales extends StatelessWidget {
                       child: Text(value),
                     );
                   }).toList(),
-                  decoration: InputDecoration(labelText: 'Sexo'),
+                  decoration: const InputDecoration(labelText: 'Sexo'),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _pesoController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Peso (kg)'),
+                  decoration: const InputDecoration(labelText: 'Peso (kg)'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Por favor ingresa el peso';
@@ -90,11 +92,11 @@ class datosPersonales extends StatelessWidget {
                     return null;
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _tallaController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Talla (m)'),
+                  decoration: const InputDecoration(labelText: 'Talla (m)'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Por favor ingresa la talla';
@@ -126,14 +128,14 @@ class datosPersonales extends StatelessWidget {
                             .updateEdad(edad);
                             
                         Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => antecedentesPersonales())
+                          MaterialPageRoute(builder: (context) => const antecedentesPersonales())
                         );
                       }
                     },
-                    child: Text('Calcular'),
+                    child: const Text('Calcular'),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Consumer<datosFormulario>(
                   builder: (context, calculos, child) {
                     return Column(

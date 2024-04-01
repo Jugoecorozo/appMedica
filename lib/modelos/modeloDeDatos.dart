@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:pdf/widgets.dart' as pw; // Importamos la biblioteca para generar PDFs
 
