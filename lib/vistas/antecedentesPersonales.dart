@@ -9,15 +9,14 @@ class antecedentesPersonales extends StatefulWidget {
       _AntecedentesPersonalesWidgetState();
 }
 
+
 class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
   final List<String> _patologicosSeleccionados = [];
-  String _quirurgicosSeleccionados = "";
+  final List<String> _quirurgicosSeleccionados = [];
   final List<String> _anestesicosSeleccionados = [];
-  String _alergicosSeleccionados = "";
-  String _toxicosSeleccionados = "";
-  String _transfusionalesSeleccionados = "";
-  final _quirurgicosController = TextEditingController();
-  final _alergicosController = TextEditingController();
+  final List<String> _alergicosSeleccionados = [];
+  final List<String> _toxicosSeleccionados = [];
+  final List<String> _transfusionalesSeleccionados = [];
 
   final List<String> patologicos = [
     'Fumador.',
@@ -100,6 +99,12 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
     'Con muerte cerebral: Donante de órganos.',
   ];
 
+  final List<String> quirurgicos = [
+    'Sí',
+    'No',
+    // Agrega más opciones aquí...
+  ];
+
   final List<String> anestesicos = [
     'Sedación',
     'Anestesia general',
@@ -109,6 +114,50 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
     'Anestesia local',
     // Agrega más opciones aquí
   ];
+
+  final List<String> complicacionesAnestesicas = [
+    'Apnea',
+    'Dificultad para la ventilación',
+    'Dificultad para la intubación',
+    'Cefalea postpunción',
+    'Nausea y vómito',
+    'Infección del sitio de punción',
+    'Dolor persistente en el sitio de punción',
+    'Neuroinfección',
+    'Ulcera corneal',
+    'Epistaxis',
+    'Irritabilidad postanestésica',
+    'Despertar intraoperatorio',
+    'Parestesia',
+    'Neuropatía',
+    'Otros'
+  ];
+
+  final List<String> alergicos = [
+    'Sí',
+    'No',
+    // Agrega más opciones aquí...
+  ];
+
+  final List<String> toxicos = [
+    'No tiene antecedentes Tóxicos',
+    'Tabaquismo',
+    'Sustancias psicoactivas',
+    'Alcoholismo',
+    'Biomasa',
+    'Otros',
+  ];
+
+  final List<String> transfusionales = [
+    'Sí',
+    'No',
+    // Agrega más opciones aquí...
+  ];
+
+  final List<String> _complicacionesAnestesicasSeleccionadas = [];
+  String _quirurgicosEspecifica = '';
+  String _transfusionalesEspecifica = '';
+  String _alergicosEspecifica = '';
   String _filtroPatologicos = '';
 
   @override
@@ -122,253 +171,282 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'ANTECEDENTES PERSONALES:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Antecedentes Patológicos:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Buscar',
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _filtroPatologicos = value.toLowerCase();
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    _buildPatologicosList(),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Quirúrgicos:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            RadioListTile(
-              value: "Si",
-              groupValue: _quirurgicosSeleccionados,
-              title: const Text('Si'),
-              onChanged: (value) {
-                setState(() {
-                  _quirurgicosSeleccionados = value.toString();
-                });
-              },
-            ),
-            RadioListTile(
-              value: "No",
-              groupValue: _quirurgicosSeleccionados,
-              title: const Text('No'),
-              onChanged: (value) {
-                setState(() {
-                  _quirurgicosSeleccionados = value.toString();
-                });
-              },
-            ),
-            if (_quirurgicosSeleccionados == "Si")
-              TextField(
-                controller: _quirurgicosController,
-                decoration: const InputDecoration(
-                  labelText: 'Indique cuáles:',
-                ),
-                onChanged: (value) {
-                  _quirurgicosSeleccionados = value;
-                },
-              ),
-            const SizedBox(height: 32),
-            const Text(
-              'Anestésicos:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            RadioListTile(
-              value: "Si",
-              groupValue:
-                  _anestesicosSeleccionados.contains("Si") ? "Si" : "No",
-              title: const Text('Si'),
-              onChanged: (value) {
-                setState(() {
-                  if (value == "Si") {
-                    _anestesicosSeleccionados.add(value!);
-                  } else {
-                    _anestesicosSeleccionados.remove("Si");
-                  }
-                });
-              },
-            ),
-            RadioListTile(
-              value: "No",
-              groupValue:
-                  _anestesicosSeleccionados.contains("Si") ? "Si" : "No",
-              title: const Text('No'),
-              onChanged: (value) {
-                setState(() {
-                  if (value == "No") {
-                    _anestesicosSeleccionados.remove("Si");
-                  } else {
-                    _anestesicosSeleccionados.add("Si");
-                  }
-                });
-              },
-            ),
-            if (_anestesicosSeleccionados.contains("Si"))
-              _buildAnestesicosList(),
-            const SizedBox(height: 16),
-            const Text(
-              'Alergicos:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            RadioListTile(
-              value: "Si",
-              groupValue: _alergicosSeleccionados,
-              title: const Text('Si'),
-              onChanged: (value) {
-                setState(() {
-                  _alergicosSeleccionados = value.toString();
-                });
-              },
-            ),
-            RadioListTile(
-              value: "No",
-              groupValue: _alergicosSeleccionados,
-              title: const Text('No'),
-              onChanged: (value) {
-                setState(() {
-                  _alergicosSeleccionados = value.toString();
-                });
-              },
-            ),
-            if (_alergicosSeleccionados == "Si")
-              TextField(
-                controller: _alergicosController,
-                decoration: const InputDecoration(
-                  labelText: 'Indique cuáles:',
-                ),
-                onChanged: (value) {
-                  _alergicosSeleccionados = value;
-                },
-              ),
-            const SizedBox(height: 32),
-            const Text(
-              'Toxicos:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            RadioListTile(
-              value: "Si",
-              groupValue: _toxicosSeleccionados,
-              title: const Text('Si'),
-              onChanged: (value) {
-                setState(() {
-                  _toxicosSeleccionados = value.toString();
-                });
-              },
-            ),
-            RadioListTile(
-              value: "No",
-              groupValue: _toxicosSeleccionados,
-              title: const Text('No'),
-              onChanged: (value) {
-                setState(() {
-                  _toxicosSeleccionados = value.toString();
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Transfusionales:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            RadioListTile(
-              value: "Si",
-              groupValue: _transfusionalesSeleccionados,
-              title: const Text('Si'),
-              onChanged: (value) {
-                setState(() {
-                  _transfusionalesSeleccionados = value.toString();
-                });
-              },
-            ),
-            RadioListTile(
-              value: "No",
-              groupValue: _transfusionalesSeleccionados,
-              title: const Text('No'),
-              onChanged: (value) {
-                setState(() {
-                  _transfusionalesSeleccionados = value.toString();
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-                // ignore: avoid_print
-                onPressed: () {
-                  print('Patológicos: $_patologicosSeleccionados');
-                  print('Quirúrgicos: $_quirurgicosSeleccionados');
-                  print('Anestésicos: $_anestesicosSeleccionados');
-                  print('Alergicos: $_alergicosSeleccionados');
-                  print('Tóxicos: $_toxicosSeleccionados');
-                  print('Transfusionales: $_transfusionalesSeleccionados');
-                },
-                child: const Text('Siguiente')),
+            _buildTitle(),
+            SizedBox(height: 16),
+            _buildPatologicosSection(),
+            SizedBox(height: 16),
+            _buildQuirurgicosSection(),
+            SizedBox(height: 16),
+            _buildAnestesicosSection(),
+            SizedBox(height: 16),
+            _buildAlergicosSection(),
+            SizedBox(height: 16),
+            _buildToxicosSection(),
+            SizedBox(height: 16),
+            _buildTransfusionalesSection(),
+            SizedBox(height: 16),
+            _buildSubmitButton(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPatologicosList() {
-    final List<String> patologicosFiltrados = patologicos.where((patologico) {
-      return patologico.toLowerCase().contains(_filtroPatologicos);
-    }).toList();
-    return Column(
-      children: patologicosFiltrados.map((patologico) {
-        return CheckboxListTile(
-          title: Text(patologico),
-          value: _patologicosSeleccionados.contains(patologico),
-          onChanged: (value) {
-            setState(() {
-              if (value != null && value) {
-                _patologicosSeleccionados.add(patologico);
-              } else {
-                _patologicosSeleccionados.remove(patologico);
-              }
-            });
-          },
-        );
-      }).toList(),
+  Widget _buildTitle() {
+    return const Text(
+      'ANTECEDENTES PERSONALES:',
+      style: TextStyle(fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _buildAnestesicosList() {
+  Widget _buildPatologicosSection() {
+    return _buildListSection(
+      title: 'Antecedentes Patológicos:',
+      options: patologicos,
+      selectedOptions: _patologicosSeleccionados,
+    );
+  }
+
+  Widget _buildQuirurgicosSection() {
+    return _buildListSection(
+    title: 'Antecedentes Quirúrgicos:',
+    options: quirurgicos,
+    selectedOptions: _quirurgicosSeleccionados,
+    isSingleSelection: true,
+    onEspecificaChanged: (value) {
+      setState(() {
+        _quirurgicosEspecifica = value;
+        if (!_quirurgicosSeleccionados.contains(value)) {
+          _quirurgicosSeleccionados.add(value);
+        }
+      });
+    },
+  );
+  }
+
+  Widget _buildAnestesicosSection() {
     return Column(
-      children: anestesicos.map((anestesico) {
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildListSection(
+        title: 'Antecedentes Anestésicos:',
+        options: anestesicos,
+        selectedOptions: _anestesicosSeleccionados,
+        isSingleSelection: true,
+      ),
+      SizedBox(height: 16),
+      _buildListSection(
+        title: 'Complicaciones Anestésicas:',
+        options: complicacionesAnestesicas,
+        selectedOptions: _complicacionesAnestesicasSeleccionadas,
+      ),
+    ],
+  );
+  }
+
+  Widget _buildAlergicosSection() {
+    return _buildListSection(
+    title: 'Antecedentes Alérgicos:',
+    options: alergicos,
+    selectedOptions: _alergicosSeleccionados,
+    isSingleSelection: true,
+    onEspecificaChanged: (value) {
+      setState(() {
+        _alergicosEspecifica = value;
+        if (!_alergicosSeleccionados.contains(value)) {
+          _alergicosSeleccionados.add(value);
+        }
+      });
+    },
+  );
+  }
+
+  Widget _buildToxicosSection() {
+    return _buildListSection(
+      title: 'Antecedentes Tóxicos:',
+      options: toxicos,
+      selectedOptions: _toxicosSeleccionados,
+      isSingleSelection: true
+    );
+  }
+
+  Widget _buildTransfusionalesSection() {
+    return _buildListSection(
+    title: 'Antecedentes Transfusionales:',
+    options: transfusionales,
+    selectedOptions: _transfusionalesSeleccionados,
+    isSingleSelection: true,
+    onEspecificaChanged: (value) {
+      setState(() {
+        _transfusionalesEspecifica = value;
+        if (!_transfusionalesSeleccionados.contains(value)) {
+          _transfusionalesSeleccionados.add(value);
+        }
+      });
+    },
+  );
+  }
+
+Widget _buildListSection({
+    required String title,
+    required List<String> options,
+    required List<String> selectedOptions,
+    bool isSingleSelection = false,
+    Function(String)? onEspecificaChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                if (!isSingleSelection)
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Buscar',
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _filtroPatologicos = value.toLowerCase();
+                      });
+                    },
+                  ),
+                if (!isSingleSelection) const SizedBox(height: 8),
+                _buildList(options, selectedOptions, isSingleSelection, onEspecificaChanged),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+Widget _buildList(List<String> options, List<String> selectedOptions, bool isSingleSelection, Function(String)? onEspecificaChanged) {
+  final List<String> filteredOptions = options.where((option) {
+    return option.toLowerCase().contains(_filtroPatologicos);
+  }).toList();
+  return Column(
+    children: [
+      ...filteredOptions.map((option) {
         return CheckboxListTile(
-          title: Text(anestesico),
-          value: _anestesicosSeleccionados.contains(anestesico),
+          title: Text(option),
+          value: selectedOptions.contains(option),
           onChanged: (value) {
             setState(() {
               if (value != null && value) {
-                _anestesicosSeleccionados.add(anestesico);
+                if (isSingleSelection) {
+                  selectedOptions.clear();
+                }
+                selectedOptions.add(option);
               } else {
-                _anestesicosSeleccionados.remove(anestesico);
+                selectedOptions.remove(option);
               }
             });
           },
         );
       }).toList(),
+      if (isSingleSelection && selectedOptions.contains('Sí'))
+        TextField(
+          decoration: InputDecoration(
+            labelText: 'Por favor, especifica',
+          ),
+          onChanged: onEspecificaChanged,
+        ),
+    ],
+  );
+}
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      onPressed: () {
+        print('Patológicos: $_patologicosSeleccionados');
+        print('Quirúrgicos: $_quirurgicosSeleccionados');
+        print('Anestésicos: $_anestesicosSeleccionados');
+        print('Alergicos: $_alergicosSeleccionados');
+        print('Tóxicos: $_toxicosSeleccionados');
+        print('Transfusionales: $_transfusionalesSeleccionados');
+      },
+      child: const Text('Siguiente'),
     );
   }
 }
+/*
+
+final TextEditingController _quirurgicosController = TextEditingController();
+final TextEditingController _transfusionalesController = TextEditingController();
+final TextEditingController _alergicosController = TextEditingController();
+
+Widget _buildQuirurgicosSection() {
+  return _buildListSection(
+    title: 'Antecedentes Quirúrgicos:',
+    options: quirurgicos,
+    selectedOptions: _quirurgicosSeleccionados,
+    isSingleSelection: true,
+    textFieldController: _quirurgicosController,
+  );
+}
+
+Widget _buildTransfusionalesSection() {
+  return _buildListSection(
+    title: 'Antecedentes Transfusionales:',
+    options: transfusionales,
+    selectedOptions: _transfusionalesSeleccionados,
+    isSingleSelection: true,
+    textFieldController: _transfusionalesController,
+  );
+}
+
+Widget _buildAlergicosSection() {
+  return _buildListSection(
+    title: 'Antecedentes Alérgicos:',
+    options: alergicos,
+    selectedOptions: _alergicosSeleccionados,
+    isSingleSelection: true,
+    textFieldController: _alergicosController,
+  );
+}
+
+Widget _buildList(List<String> options, List<String> selectedOptions, bool isSingleSelection, TextEditingController? textFieldController) {
+  // ...
+  if (isSingleSelection && selectedOptions.contains('Sí'))
+    TextField(
+      controller: textFieldController,
+      decoration: InputDecoration(
+        labelText: 'Por favor, especifica',
+      ),
+    ),
+  // ...
+}
+
+Widget _buildSubmitButton() {
+  return ElevatedButton(
+    onPressed: () {
+      if (_quirurgicosSeleccionados.contains('Sí')) {
+        _quirurgicosSeleccionados.add(_quirurgicosController.text);
+      }
+      if (_transfusionalesSeleccionados.contains('Sí')) {
+        _transfusionalesSeleccionados.add(_transfusionalesController.text);
+      }
+      if (_alergicosSeleccionados.contains('Sí')) {
+        _alergicosSeleccionados.add(_alergicosController.text);
+      }
+      print('Patológicos: $_patologicosSeleccionados');
+      print('Quirúrgicos: $_quirurgicosSeleccionados');
+      print('Anestésicos: $_anestesicosSeleccionados');
+      print('Alergicos: $_alergicosSeleccionados');
+      print('Tóxicos: $_toxicosSeleccionados');
+      print('Transfusionales: $_transfusionalesSeleccionados');
+    },
+    child: const Text('Siguiente'),
+  );
+}
+
+*/
