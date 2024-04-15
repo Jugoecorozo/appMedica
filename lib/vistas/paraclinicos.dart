@@ -1,60 +1,18 @@
 
 import 'package:app_medica/calculos/datosFormulario.dart';
+import 'package:app_medica/vistas/planAnestesico.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-class paraclinicos extends StatefulWidget {
-  const paraclinicos({super.key});
+class ParaclinicosWidget extends StatelessWidget {
+  const ParaclinicosWidget({super.key});
 
   @override
-  State<paraclinicos> createState() => _paraclinicosState();
-}
-
-class _paraclinicosState extends State<paraclinicos> {
-
-  double? hemoglobina1;
-  double? hemoglobina2;
-  double? hemoglobina3;
-
-  Widget _buildNumericField(String label) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(label),
-        ),
-        SizedBox(width: 10),
-        SizedBox(
-          width: 100,
-          child: TextFormField(
-            keyboardType: TextInputType.number,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTextField(String label) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(label),
-        ),
-        SizedBox(width: 10),
-        SizedBox(
-          width: 100,
-          child: TextFormField(),
-        ),
-      ],
-    );
-  }
-
-
- @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Paraclínicos y Ayudas Diagnósticas'),
+        title: const Text('Paraclínicos y Ayudas Diagnósticas'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -62,56 +20,54 @@ class _paraclinicosState extends State<paraclinicos> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'PARACLÍNICOS',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
-              _buildNumericField('Leucocitos'),
-              _buildNumericField('Neutrófilos'),
-              _buildNumericField('Linfocitos'),
-              _buildNumericField('Hemoglobina'),
-              _buildNumericField('Hematocrito'),
-              _buildNumericField('Plaquetas'),
-              _buildNumericField('Bun'),
-              _buildNumericField('Creatinina'),
-              _buildNumericField('Glicemia'),
-              _buildNumericField('HbA1C'),
-              _buildNumericField('TP'),
-              _buildNumericField('TPT'),
-              _buildNumericField('Sodio'),
-              _buildNumericField('Potasio'),
-              _buildNumericField('Cloro'),
-              _buildNumericField('Gases Arteriales'),
-              _buildNumericField('Otros'),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 10),
+              _buildNumericField(context, 'Leucocitos'),
+              _buildNumericField(context, 'Neutrófilos'),
+              _buildNumericField(context, 'Linfocitos'),
+              _buildNumericField(context, 'Hemoglobina'),
+              _buildNumericField(context, 'Hematocrito'),
+              _buildNumericField(context, 'Plaquetas'),
+              _buildNumericField(context, 'Bun'),
+              _buildNumericField(context, 'Creatinina'),
+              _buildNumericField(context, 'Glicemia'),
+              _buildNumericField(context, 'HbA1C'),
+              _buildNumericField(context, 'TP'),
+              _buildNumericField(context, 'TPT'),
+              _buildNumericField(context, 'Sodio'),
+              _buildNumericField(context, 'Potasio'),
+              _buildNumericField(context, 'Cloro'),
+              _buildNumericField(context, 'Gases Arteriales'),
+              _buildTextField(context, 'Otros'),
+              const SizedBox(height: 20),
+              const Text(
                 'AYUDAS DIAGNOSTICAS',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
-              _buildTextField('EKG'),
-              _buildTextField('Ecocardiograma'),
-              _buildTextField('Rx de tórax'),
-              _buildTextField('Otro'),
-              SizedBox(height: 20),
+              const SizedBox(height: 10),
+              _buildTextField(context, 'EKG'),
+              _buildTextField(context, 'Ecocardiograma'),
+              _buildTextField(context, 'Rx de tórax'),
+              _buildTextField(context, 'Otro'),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Provider.of<datosFormulario>(context, listen: false)
-                      .updatePerdidasPermisibles(0.1, 1);
-                  Provider.of<datosFormulario>(context, listen: false)
-                      .updatePerdidasPermisibles(0.2, 2);
-                  Provider.of<datosFormulario>(context, listen: false)
-                      .updatePerdidasPermisibles(0.3, 3);
+                  Provider.of<datosFormulario>(context, listen: false).updatePerdidasPermisibles();
+                  Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) =>  const planAnestesico()));
+                  
                 },
-                child: Text('Guardar'),
+                child: const Text('Guardar'),
               ),
               Consumer<datosFormulario>(
                   builder: (context, calculos, child) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('IMC: ${calculos.perdidasPermisibles}'),
+                        Text('PERDIDAS : ${calculos.perdidasPermisibles}'),
                       ],
                     );
                   },
@@ -120,6 +76,129 @@ class _paraclinicosState extends State<paraclinicos> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildNumericField(BuildContext context, String label) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            decoration: const InputDecoration(labelText: 'Peso (kg)'),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              final double? numericValue = double.tryParse(value);
+              switch (label) {
+                case 'Leucocitos':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .leucocitos = numericValue;
+                  break;
+                case 'Neutrófilos':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .neutrofilos = numericValue;
+                  break;
+                case 'Linfocitos':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .linfocitos = numericValue;
+                  break;
+                case 'Hemoglobina':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .hemoglobina = numericValue!;
+                  break;
+                case 'Hematocrito':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .hematocrito = numericValue;
+                  break;
+                case 'Plaquetas':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .plaquetas = numericValue;
+                  break;
+                case 'Bun':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .bun = numericValue;
+                  break;
+                case 'Creatinina':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .creatinina = numericValue;
+                  break;
+                case 'Glicemia':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .glicemia = numericValue;
+                  break;
+                case 'HbA1C':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .hba1c = numericValue;
+                  break;
+                case 'TP':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .tp = numericValue;
+                  break;
+                case 'TPT':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .tpt = numericValue;
+                  break;
+                case 'Sodio':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .sodio = numericValue;
+                  break;
+                case 'Potasio':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .potasio = numericValue;
+                  break;
+                case 'Cloro':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .cloro = numericValue;
+                  break;
+                case 'Gases Arteriales':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .gasesArteriales = numericValue;
+                  break;
+                default:
+                  break;
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField(BuildContext context, String label) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(label),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 100,
+          child: TextFormField(
+            onChanged: (value) {
+              switch (label) {
+                case 'EKG':
+                  Provider.of<datosFormulario>(context, listen: false).ekg =
+                      value;
+                  break;
+                case 'Ecocardiograma':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .ecocardiograma = value;
+                  break;
+                case 'Rx de tórax':
+                  Provider.of<datosFormulario>(context, listen: false).rxTorax =
+                      value;
+                  break;
+                case 'Otro':
+                  Provider.of<datosFormulario>(context, listen: false)
+                      .otroAyudaDiagnostica = value;
+                  break;
+                default:
+                  break;
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

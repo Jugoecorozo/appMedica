@@ -1,6 +1,5 @@
 import 'package:app_medica/calculos/datosFormulario.dart';
-import 'package:app_medica/vistas/antecedentesPersonales.dart';
-import 'package:app_medica/vistas/splash_screen.dart';
+import 'package:app_medica/vistas/tipoDeCirugia.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,9 +17,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return   const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: antecedentesPersonales(),
+      home: SurgeryRiskCalculator(),
     );
   }
 }

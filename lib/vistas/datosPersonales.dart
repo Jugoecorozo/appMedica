@@ -67,8 +67,7 @@ class datosPersonales extends StatelessWidget {
                 DropdownButtonFormField(
                   value: _sexo,
                   onChanged: (value) {
-                    _sexo = value!;Provider.of<datosFormulario>(context, listen: false)
-                            .updatePerdidasPermisibles(14, 20);
+                    _sexo = value!;
                   },
                   items: ['Masculino', 'Femenino']
                       .map<DropdownMenuItem<String>>((String value) {

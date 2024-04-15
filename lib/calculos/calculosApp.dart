@@ -23,14 +23,19 @@ class CalculosApp{
   }
 
   //Calculo de perdidas permisibles, en la variable tasa se ingresará el porcentaje de perdida (ejemplo: 0.1 para 10% de perdida)
-  static double perdidasPermisibles(double hemoglobina, double volemia, double tasa) {
-    return (hemoglobina - hemoglobina * tasa) / (hemoglobina + hemoglobina * tasa / 2) * volemia;
+  static List<double> perdidasPermisibles(double hemoglobina, double volemia) {
+    List<double> tasas = [0.1, 0.2, 0.3];
+    return tasas.map((tasa) => (hemoglobina - hemoglobina * tasa) / (hemoglobina + hemoglobina * tasa / 2) * volemia).toList();
   }
+
 
   static double tasaDeFiltracionGlomerular(double edad, double creatinina,double peso) {
       return (140 - edad) * peso / (72 * creatinina);
   }
 
+  static double indiceDePaquetesAnual(int cigarrillos, int anual){
+    return cigarrillos * anual / 20;
+  }
 
 
 }
