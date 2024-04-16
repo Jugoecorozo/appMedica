@@ -2,6 +2,11 @@ import 'package:app_medica/calculos/datosFormulario.dart';
 import 'package:app_medica/vistas/tipoDeCirugia.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'tema.dart';
+
+
+final ThemeData miTemaClaro = ThemeData.from(colorScheme: lightColorScheme);
+final ThemeData miTemaOscuro = ThemeData.from(colorScheme: darkColorScheme);
 
 void main() {
   runApp(
@@ -17,28 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return   const MaterialApp(
+    return   MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: miTemaClaro,
+      darkTheme: miTemaOscuro,
       home: SurgeryRiskCalculator(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inicio'),
-      ),
-      body: const Center(
-        child: Text(
-          '¡Hola, mundo!',
-          style: TextStyle(fontSize: 24.0),
-        ),
-      ),
     );
   }
 }

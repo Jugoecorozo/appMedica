@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class SurgeryRiskCalculator extends StatefulWidget {
   const SurgeryRiskCalculator({super.key});
@@ -91,8 +90,7 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(scale),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         // Aquí puedes colocar el widget específico para cada escala
                         if (scale == 'Escala De Glance')
                           GlanceScaleWidget(onValueUpdated: updateScaleValue),
@@ -140,7 +138,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
 
 class GlanceScaleWidget extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
-  const GlanceScaleWidget({super.key, required this.onValueUpdated});
+  const GlanceScaleWidget({Key? key, required this.onValueUpdated})
+      : super(key: key);
 
   @override
   _GlanceScaleWidgetState createState() => _GlanceScaleWidgetState();
@@ -148,6 +147,7 @@ class GlanceScaleWidget extends StatefulWidget {
 
 class _GlanceScaleWidgetState extends State<GlanceScaleWidget> {
   TextEditingController textFieldController = TextEditingController();
+  int selectedCellIndex = -1;
 
   void updateTextField(String value) {
     setState(() {
@@ -180,42 +180,21 @@ class _GlanceScaleWidgetState extends State<GlanceScaleWidget> {
             ],
             rows: [
               DataRow(cells: [
-                DataCell(SizedBox(
-                  width: 300,
-                  child: GestureDetector(
-                    onTap: () {
-                      updateTextField('Riesgo quirúrgico bajo');
-                    },
-                    child: Text(
-                      '- Cirugía superficial\n- Cirugía de mama\n- Odontología\n- Tiroides\n- Ojo\n- Reconstructiva\n- Carotídea en pacientes asintomáticos (endarterectomía o STENT carotídeo)\n- Ginecológica menor\n- Ortopédica menor (meniscectomía)\n- Urológica menor (Resección transuretral de próstata)',
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                )),
-                DataCell(SizedBox(
-                  width: 300,
-                  child: GestureDetector(
-                    onTap: () {
-                      updateTextField('Riesgo quirúrgico intermedio');
-                    },
-                    child: Text(
-                      '- Intraperitoneal (esplenectomía, reparación de hernia hiatal, colecistectomía)\n- Carotídea en pacientes sintomáticos (endarterectomía o STENT carotídeo)\n- Angioplastia arterial periférica\n- Reparación endovascular de aneurisma\n- Cirugía de cabeza y cuello\n- Neurocirugía\n- Ortopedia mayor (cadera, columna)\n- Ginecológica mayor\n- Urológica mayor\n- Trasplante renal\n- Intratorácica (no mayor)',
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                )),
-                DataCell(SizedBox(
-                  width: 300,
-                  child: GestureDetector(
-                    onTap: () {
-                      updateTextField('Riesgo quirúrgico alto');
-                    },
-                    child: Text(
-                      '- Cirugía aortica y vascular mayor\n- Cirugía pancreática-duodenal\n- Revascularización abierta de miembros inferiores o amputación o troboembolectomía\n- Resección hepática o cirugía de la vía biliar\n- Esofagectomía\n- Reparación de perforación intestinal\n- Resección adrenal\n- Cistectomía total\n- Neumonectomía\n- Trasplante hepático\n- Trasplante pulmonar',
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                )),
+                buildDataCell(
+                  'Riesgo quirúrgico bajo',
+                  '- Cirugía superficial\n- Cirugía de mama\n- Odontología\n- Tiroides\n- Ojo\n- Reconstructiva\n- Carotídea en pacientes asintomáticos (endarterectomía o STENT carotídeo)\n- Ginecológica menor\n- Ortopédica menor (meniscectomía)\n- Urológica menor (Resección transuretral de próstata)',
+                  0,
+                ),
+                buildDataCell(
+                  'Riesgo quirúrgico intermedio',
+                  '- Intraperitoneal (esplenectomía, reparación de hernia hiatal, colecistectomía)\n- Carotídea en pacientes sintomáticos (endarterectomía o STENT carotídeo)\n- Angioplastia arterial periférica\n- Reparación endovascular de aneurisma\n- Cirugía de cabeza y cuello\n- Neurocirugía\n- Ortopedia mayor (cadera, columna)\n- Ginecológica mayor\n- Urológica mayor\n- Trasplante renal\n- Intratorácica (no mayor)',
+                  1,
+                ),
+                buildDataCell(
+                  'Riesgo quirúrgico alto',
+                  '- Cirugía aortica y vascular mayor\n- Cirugía pancreática-duodenal\n- Revascularización abierta de miembros inferiores o amputación o troboembolectomía\n- Resección hepática o cirugía de la vía biliar\n- Esofagectomía\n- Reparación de perforación intestinal\n- Resección adrenal\n- Cistectomía total\n- Neumonectomía\n- Trasplante hepático\n- Trasplante pulmonar',
+                  2,
+                ),
               ]),
             ],
           ),
@@ -231,12 +210,42 @@ class _GlanceScaleWidgetState extends State<GlanceScaleWidget> {
       ],
     );
   }
+
+  DataCell buildDataCell(String title, String content, int index) {
+    final isSelected = selectedCellIndex == index;
+
+    return DataCell(
+      GestureDetector(
+        onTap: () {
+          setState(() {
+            selectedCellIndex = index;
+          });
+          updateTextField(title);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Colors.blue[100]
+                : null, // Cambia el color de fondo si está seleccionado
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          width: 300,
+          child: Text(
+            content,
+            textAlign: TextAlign.left,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class LeeScaleWidget extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
-
-  LeeScaleWidget({super.key, required this.onValueUpdated});
+  const LeeScaleWidget({Key? key, required this.onValueUpdated})
+      : super(key: key);
 
   @override
   State<LeeScaleWidget> createState() => _LeeScaleWidgetState();
@@ -244,6 +253,39 @@ class LeeScaleWidget extends StatefulWidget {
 
 class _LeeScaleWidgetState extends State<LeeScaleWidget> {
   TextEditingController textFieldController = TextEditingController();
+
+  List<int> selectedRows = [];
+
+  void updateTextField() {
+    setState(() {
+      if (selectedRows.isEmpty) {
+        textFieldController.text = 'Riesgo bajo';
+        widget.onValueUpdated('Escala De Lee', 'Riesgo bajo');
+      } else if (selectedRows.length == 1) {
+        textFieldController.text = 'Riesgo moderado';
+        widget.onValueUpdated('Escala De Lee', 'Riesgo moderado');
+      } else if (selectedRows.length == 2) {
+        textFieldController.text = 'Riesgo medio/alto';
+        widget.onValueUpdated('Escala De Lee', 'Riesgo medio/alto');
+      } else {
+        textFieldController.text = 'Riesgo alto';
+        widget.onValueUpdated('Escala De Lee', 'Riesgo alto');
+      }
+    });
+  }
+
+  
+
+  void toggleRowSelection(int index) {
+    setState(() {
+      if (selectedRows.contains(index)) {
+        selectedRows.remove(index);
+      } else {
+        selectedRows.add(index);
+      }
+      updateTextField();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -256,11 +298,10 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
             fontSize: 18,
           ),
         ),
-
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            columns: <DataColumn>[
+            columns: const <DataColumn>[
               DataColumn(
                 label: Text(
                   'CRITERIOS',
@@ -276,6 +317,10 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
             ],
             rows: <DataRow>[
               DataRow(
+                selected: selectedRows.contains(0),
+                onSelectChanged: (selected) {
+                  toggleRowSelection(0);
+                },
                 cells: <DataCell>[
                   DataCell(Text(
                       'Cirugía de alto riesgo: Torácica, abdominal,  aórtica, vascular renal, vascular mesentérica.')),
@@ -283,6 +328,10 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 ],
               ),
               DataRow(
+                selected: selectedRows.contains(1),
+                onSelectChanged: (selected) {
+                  toggleRowSelection(1);
+                },
                 cells: <DataCell>[
                   DataCell(Text(
                       'Cardiopatía isquémica: Historia de infarto al miocardio, prueba de ejercicio positiva,\n precordalgia secundaria a isquemia miocárdica, tratamiento con nitratos, electrocardiograma con ondas Q patológicas')),
@@ -290,6 +339,10 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 ],
               ),
               DataRow(
+                selected: selectedRows.contains(2),
+                onSelectChanged: (selected) {
+                  toggleRowSelection(2);
+                },
                 cells: <DataCell>[
                   DataCell(Text(
                       'Insuficiencia cardíaca congestiva: insuficiencia cardíaca izquierda al examen físico, historia de disnea paroxística nocturna, \nhistoria de edema agudo pulmonar, presencia de tercer ruido o crépitos bilaterales')),
@@ -297,6 +350,10 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 ],
               ),
               DataRow(
+                selected: selectedRows.contains(3),
+                onSelectChanged: (selected) {
+                  toggleRowSelection(3);
+                },
                 cells: <DataCell>[
                   DataCell(Text(
                       'Historia de enfermedad cerebrovascular: crisis isquémica transitoria, accidente cerebrovascular.')),
@@ -304,12 +361,20 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 ],
               ),
               DataRow(
+                selected: selectedRows.contains(4),
+                onSelectChanged: (selected) {
+                  toggleRowSelection(4);
+                },
                 cells: <DataCell>[
                   DataCell(Text('Tratamiento preoperatorio con insulina.')),
                   DataCell(Text('1')),
                 ],
               ),
               DataRow(
+                selected: selectedRows.contains(5),
+                onSelectChanged: (selected) {
+                  toggleRowSelection(5);
+                },
                 cells: <DataCell>[
                   DataCell(Text('Creatinina sérica preoperatoria > 2mg/kg.')),
                   DataCell(Text('1')),
@@ -318,8 +383,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
             ],
           ),
         ),
-
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -328,15 +392,15 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
           ),
           keyboardType: TextInputType.number,
         ),
-        // Aquí puedes agregar los campos y la tabla para la Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)
       ],
     );
   }
 }
 
+
 class CapacidadFuncional extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
-  const CapacidadFuncional({super.key, required this.onValueUpdated});
+  const CapacidadFuncional({Key? key, required this.onValueUpdated}) : super(key: key);
 
   @override
   State<CapacidadFuncional> createState() => _CapacidadFuncionalState();
@@ -344,6 +408,43 @@ class CapacidadFuncional extends StatefulWidget {
 
 class _CapacidadFuncionalState extends State<CapacidadFuncional> {
   TextEditingController textFieldController = TextEditingController();
+  int? selectedRow;
+
+  void updateTextField() {
+    setState(() {
+      if (selectedRow == null) {
+        textFieldController.text = '';
+      } else {
+        textFieldController.text = getCapacity(selectedRow!);
+      }
+    });
+  }
+
+  String getCapacity(int index) {
+    switch (index) {
+      case 0:
+        return 'Capacidad excelente 7-10';
+      case 1:
+        return 'Capacidad buena 5-7';
+      case 2:
+        return 'Capacidad aceptable 2-5';
+      case 3:
+        return 'Capacidad mala <2';
+      default:
+        return '';
+    }
+  }
+
+  void toggleRowSelection(int index) {
+    setState(() {
+      if (selectedRow == index) {
+        selectedRow = null;
+      } else {
+        selectedRow = index;
+      }
+      updateTextField();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -356,111 +457,54 @@ class _CapacidadFuncionalState extends State<CapacidadFuncional> {
             fontSize: 18,
           ),
         ),
-
-
-SingleChildScrollView(
-  scrollDirection: Axis.horizontal,
-  child: DataTable(
-    dataRowMaxHeight: 150,
-    columns: <DataColumn>[
-      DataColumn(
-        label: Text(
-          'METS',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'ACTIVIDAD',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'NIHA',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-    ],
-    rows: <DataRow>[
-      DataRow(
-        cells: <DataCell>[
-          DataCell(Text('Capacidad excelente 7-10')),
-          DataCell(Text(
-    '- Actividades exteriores moderadas\n'
-    '- Bailar, correr, deportes al aire libre\n'
-    '- Transportar objetos de aproximadamente 36kg\n'
-    '- Caminar aproximadamente 7km/hr\n'
-    '- Transportar aproximadamente 10kg /8 escalones',
-  )
-          ),
-          DataCell(Text('I')),
-        ],
-      ),
-      DataRow(
-        cells: <DataCell>[
-          DataCell(Text('Capacidad buena 5-7')),
-          DataCell(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-               Text(
-    '- Relaciones sexuales completas sin síntomas\n'
-    '- Caminar aproximadamente 6km/hr\n'
-    '- Trabajos domésticos pesados (mover muebles)\n'
-    '- Patinar, bailar',
-  )
-              ],
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            dataRowMaxHeight: 150,
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Text(
+                  'METS',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'ACTIVIDAD',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'NIHA',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+            rows: List<DataRow>.generate(
+              4,
+              (index) => DataRow(
+                selected: selectedRow == index,
+                onSelectChanged: (_) => toggleRowSelection(index),
+                cells: <DataCell>[
+                  DataCell(Text(getCapacity(index))),
+                  DataCell(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          getActivities(index),
+                        ),
+                      ],
+                    ),
+                  ),
+                  DataCell(Text(getNIHA(index))),
+                ],
+              ),
             ),
           ),
-          DataCell(Text('II')),
-        ],
-      ),
-      DataRow(
-        cells: <DataCell>[
-          DataCell(Text('Capacidad aceptable 2-5')),
-          DataCell(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-    '- Andar en terreno llano\n'
-    '- Subir un piso de escaleras\n'
-    '- Hacer trabajo doméstico ligero (limpiar, aspirar)\n'
-    '- Actividades recreativas (golf)\n'
-    '- Ducharse, vestirse, tender la cama\n'
-    '- Caminar aproximadamente 4km/hr',
-  )
-              ],
-            ),
-          ),
-          DataCell(Text('III')),
-        ],
-      ),
-      DataRow(
-        cells: <DataCell>[
-          DataCell(Text('Capacidad mala <2')),
-          DataCell(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-    '- Incapacidad para realizar tareas discretas\n'
-    '- Limitado a permanecer en domicilio',
-  )
-              ],
-            ),
-          ),
-          DataCell(Text('IV')),
-        ],
-      ),
-    ],
-  ),
-),
-
-
-
-        SizedBox(height: 20),
+        ),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -468,11 +512,54 @@ SingleChildScrollView(
             border: OutlineInputBorder(),
           ),
         ),
-        // Aquí puedes agregar los campos y la tabla para la Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)
       ],
     );
   }
+
+  String getActivities(int index) {
+    switch (index) {
+      case 0:
+        return '- Actividades exteriores moderadas\n'
+            '- Bailar, correr, deportes al aire libre\n'
+            '- Transportar objetos de aproximadamente 36kg\n'
+            '- Caminar aproximadamente 7km/hr\n'
+            '- Transportar aproximadamente 10kg /8 escalones';
+      case 1:
+        return '- Relaciones sexuales completas sin síntomas\n'
+            '- Caminar aproximadamente 6km/hr\n'
+            '- Trabajos domésticos pesados (mover muebles)\n'
+            '- Patinar, bailar';
+      case 2:
+        return '- Andar en terreno llano\n'
+            '- Subir un piso de escaleras\n'
+            '- Hacer trabajo doméstico ligero (limpiar, aspirar)\n'
+            '- Actividades recreativas (golf)\n'
+            '- Ducharse, vestirse, tender la cama\n'
+            '- Caminar aproximadamente 4km/hr';
+      case 3:
+        return '- Incapacidad para realizar tareas discretas\n'
+            '- Limitado a permanecer en domicilio';
+      default:
+        return '';
+    }
+  }
+
+  String getNIHA(int index) {
+    switch (index) {
+      case 0:
+        return 'I';
+      case 1:
+        return 'II';
+      case 2:
+        return 'III';
+      case 3:
+        return 'IV';
+      default:
+        return '';
+    }
+  }
 }
+
 
 class Caprini extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
@@ -497,7 +584,7 @@ class _CapriniState extends State<Caprini> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -534,7 +621,7 @@ class _AppelState extends State<Appel> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -564,7 +651,7 @@ class _BarthelState extends State<Barthel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         const Text(
           'Escala De Barthel',
           style: TextStyle(
@@ -608,7 +695,7 @@ class _AriscatState extends State<Ariscat> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -645,7 +732,7 @@ class _StopBangState extends State<StopBang> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -682,7 +769,7 @@ class _ToracoScoreState extends State<ToracoScore> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
@@ -719,7 +806,7 @@ class _EuroScoreIIState extends State<EuroScoreII> {
             fontSize: 18,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
           decoration: const InputDecoration(
