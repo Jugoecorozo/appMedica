@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: miTemaClaro,
       darkTheme: miTemaOscuro,
-      home: SurgeryRiskCalculator(),
+      home: const SurgeryRiskCalculator(),
     );
   }
 }

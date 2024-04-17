@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class SurgeryRiskCalculator extends StatefulWidget {
   const SurgeryRiskCalculator({super.key});
@@ -138,8 +140,7 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
 
 class GlanceScaleWidget extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
-  const GlanceScaleWidget({Key? key, required this.onValueUpdated})
-      : super(key: key);
+  const GlanceScaleWidget({super.key, required this.onValueUpdated});
 
   @override
   _GlanceScaleWidgetState createState() => _GlanceScaleWidgetState();
@@ -226,7 +227,7 @@ class _GlanceScaleWidgetState extends State<GlanceScaleWidget> {
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             color: isSelected
-                ? Colors.blue[100]
+                ? Colors.blue.withOpacity(0.2)
                 : null, // Cambia el color de fondo si está seleccionado
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -244,8 +245,7 @@ class _GlanceScaleWidgetState extends State<GlanceScaleWidget> {
 
 class LeeScaleWidget extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
-  const LeeScaleWidget({Key? key, required this.onValueUpdated})
-      : super(key: key);
+  const LeeScaleWidget({super.key, required this.onValueUpdated});
 
   @override
   State<LeeScaleWidget> createState() => _LeeScaleWidgetState();
@@ -321,7 +321,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 onSelectChanged: (selected) {
                   toggleRowSelection(0);
                 },
-                cells: <DataCell>[
+                cells: const <DataCell>[
                   DataCell(Text(
                       'Cirugía de alto riesgo: Torácica, abdominal,  aórtica, vascular renal, vascular mesentérica.')),
                   DataCell(Text('1')),
@@ -332,7 +332,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 onSelectChanged: (selected) {
                   toggleRowSelection(1);
                 },
-                cells: <DataCell>[
+                cells: const <DataCell>[
                   DataCell(Text(
                       'Cardiopatía isquémica: Historia de infarto al miocardio, prueba de ejercicio positiva,\n precordalgia secundaria a isquemia miocárdica, tratamiento con nitratos, electrocardiograma con ondas Q patológicas')),
                   DataCell(Text('1')),
@@ -343,7 +343,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 onSelectChanged: (selected) {
                   toggleRowSelection(2);
                 },
-                cells: <DataCell>[
+                cells: const <DataCell>[
                   DataCell(Text(
                       'Insuficiencia cardíaca congestiva: insuficiencia cardíaca izquierda al examen físico, historia de disnea paroxística nocturna, \nhistoria de edema agudo pulmonar, presencia de tercer ruido o crépitos bilaterales')),
                   DataCell(Text('1')),
@@ -354,7 +354,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 onSelectChanged: (selected) {
                   toggleRowSelection(3);
                 },
-                cells: <DataCell>[
+                cells: const <DataCell>[
                   DataCell(Text(
                       'Historia de enfermedad cerebrovascular: crisis isquémica transitoria, accidente cerebrovascular.')),
                   DataCell(Text('1')),
@@ -365,7 +365,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 onSelectChanged: (selected) {
                   toggleRowSelection(4);
                 },
-                cells: <DataCell>[
+                cells: const <DataCell>[
                   DataCell(Text('Tratamiento preoperatorio con insulina.')),
                   DataCell(Text('1')),
                 ],
@@ -375,7 +375,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
                 onSelectChanged: (selected) {
                   toggleRowSelection(5);
                 },
-                cells: <DataCell>[
+                cells: const <DataCell>[
                   DataCell(Text('Creatinina sérica preoperatoria > 2mg/kg.')),
                   DataCell(Text('1')),
                 ],
@@ -391,7 +391,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
             border: OutlineInputBorder(),
           ),
           keyboardType: TextInputType.number,
-        ),
+        ),  
       ],
     );
   }
@@ -400,7 +400,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
 
 class CapacidadFuncional extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
-  const CapacidadFuncional({Key? key, required this.onValueUpdated}) : super(key: key);
+  const CapacidadFuncional({super.key, required this.onValueUpdated});
 
   @override
   State<CapacidadFuncional> createState() => _CapacidadFuncionalState();
@@ -574,7 +574,7 @@ class _CapriniState extends State<Caprini> {
   TextEditingController textFieldController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return Column(
       children: [
         const Text(
@@ -584,6 +584,239 @@ class _CapriniState extends State<Caprini> {
             fontSize: 18,
           ),
         ),
+        SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+           dataRowMaxHeight: 190,
+           columnSpacing: 20,
+          columns: const <DataColumn>[
+            DataColumn(
+              label: Text(
+                'PUNTOS',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '0',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '1',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '2',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '3',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                '5',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+          rows: const <DataRow>[
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('Edad (Años)')),
+                DataCell(Text('<40')),
+                DataCell(Text('41-60')),
+                DataCell(Text('61-74')),
+                DataCell(Text('>75')),
+                DataCell(Text('')),
+                ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('Tipo de cirugía')),
+                DataCell(Text('')),
+                DataCell(Text('Menor')),
+                DataCell(Text('- >45 min\n- Laparoscópica >45 min\n- Artroscópica')),
+                DataCell(Text('')),
+                DataCell(Text('Artroplastia electiva mayor de extremidades inferiores')),
+              ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('Reciente <mes')),
+                DataCell(Text('')),
+                DataCell(Text('- Cirugía mayor'
+                '\n- Insuficiencia cardiaca congestiva'
+                '\n- Sepsis'
+                '\n- Neumonía'
+                '\n- Embarazo o posparto')),
+                DataCell(Text('Yeso inmovilizador')),
+                DataCell(Text('')),
+                DataCell(Text('- Fractura de cadera, pelvis o pierna'
+                '\n- Infarto'
+                '\n- Politraumatismo'
+                '\n- Lesión aguda de médula espinal que causa parálisis')),
+              ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('Enfermedad venosa o trastorno de la coagulación')),
+                DataCell(Text('')),
+                DataCell(Text('- Venas varicosas\n- Edema de miembros pélvicos')),
+                DataCell(Text('Acceso venoso central actual')),
+                DataCell(Text('- Antecedentes de TVP / EP'
+                '\n- Antecedentes familiares de trombosis'
+                '\n- Factor V Leiden positivo'
+                '\n- Homocisteína sérica elevada'
+                '\n- Anticoagulante lúpico positivo'
+                '\n- Anticuerpos anticardiolipina elevados'
+                '\n- Trombocitopenia inducida por heparina'
+                '\n- Otra trombofilia congénita o adquirida')),
+                DataCell(Text('')),
+              ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('Morbilidades')),
+                DataCell(Text('')),
+                DataCell(Text('Padecimiento médico actualmente en reposo en cama')),
+                DataCell(Text('Paciente confinado en cama > 72 horas')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+              ],
+            ),
+            DataRow(
+              cells: <DataCell>[
+                DataCell(Text('Otros')),
+                DataCell(Text('')),
+                DataCell(Text('- Antecedentes de enfermedad inflamatoria intestinal'
+                '\n- Índice de masa corporal > 25'
+                '\n- Infarto agudo al miocardio'
+                '\n- Enfermedad pulmonar obstructiva crónica'
+                '\n- Otros factores de riesgo: anticonceptivos orales o reemplazo hormonal'
+                '\n- ≥3 abortos espontáneos o nacimiento prematuro con toxemia '
+                '\no lactante con retraso del crecimiento')),
+                DataCell(Text('Neoplasia maligna actual o previa')),
+                DataCell(Text('')),
+                DataCell(Text('')),
+              ],
+            ),
+          ],
+        ),
+      ),
+
+SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child: DataTable(
+            columns: <DataColumn>[
+              DataColumn(
+                label: Text(
+                  'PUNTOS',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'CATEGORÍA',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'RIESGO',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'RECOMENDACIONES',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'QUIMIOPROFILAXIS',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+            rows: <DataRow>[
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('0')),
+                  DataCell(Text('Muy bajo')),
+                  DataCell(Text('Mínimo')),
+                  DataCell(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('- Deambulación precoz o con ayuda del equipo'),
+                        Text('- Dispositivos de compresión neumática o medias de compresión graduada'),
+                      ],
+                    ),
+                  ),
+                  DataCell(Text('Hospitalización')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('1-2')),
+                  DataCell(Text('Bajo')),
+                  DataCell(Text('Mínimo')),
+                  DataCell(Text('Dispositivos de compresión neumática con o sin medias de compresión graduada')),
+                  DataCell(Text('Hospitalización')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('3-4')),
+                  DataCell(Text('Moderado')),
+                  DataCell(Text('0.7%')),
+                  DataCell(Text('')),
+                  DataCell(Text('Hospitalización')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('5-6')),
+                  DataCell(Text('Alto')),
+                  DataCell(Text('1.8%')),
+                  DataCell(Text('Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular')),
+                  DataCell(Text('7-10 días')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('7-8')),
+                  DataCell(Text('Alto')),
+                  DataCell(Text('4%')),
+                  DataCell(Text('')),
+                  DataCell(Text('7-10 días')),
+                ],
+              ),
+              DataRow(
+                cells: <DataCell>[
+                  DataCell(Text('>9')),
+                  DataCell(Text('Muy alto')),
+                  DataCell(Text('10.7%')),
+                  DataCell(Text('')),
+                  DataCell(Text('30 días')),
+                ],
+              ),
+            ],
+          ),
+),
+      
+
+
+
         const SizedBox(height: 20),
         TextField(
           controller: textFieldController,
@@ -593,8 +826,8 @@ class _CapriniState extends State<Caprini> {
           ),
         ),
         // Aquí puedes agregar los campos y la tabla para la Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)
-      ],
-    );
+      ]
+      );
   }
 }
 
