@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
+
 class SurgeryRiskCalculator extends StatefulWidget {
-  const SurgeryRiskCalculator({super.key});
+  final int patientAge;
+  final double patientIMC;
+
+  const SurgeryRiskCalculator({
+    super.key,
+    required this.patientAge,
+    required this.patientIMC,
+  });
 
   @override
   _SurgeryRiskCalculatorState createState() => _SurgeryRiskCalculatorState();
@@ -9,8 +17,7 @@ class SurgeryRiskCalculator extends StatefulWidget {
 
 class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
   String? selectedSurgery;
-  Map<String, String> scaleValues =
-      {}; // Mapa para almacenar los valores ingresados en los TextField
+  Map<String, String> scaleValues = {};
 
   updateScaleValue(String scale, String value) {
     setState(() {
@@ -40,6 +47,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía de cabeza y cuello': [
       'Escala De Glance',
@@ -48,6 +57,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía cardiovascular': [
       'Escala De Glance',
@@ -56,7 +67,9 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
-      'Escala De EuroScore II',
+      'EUROSCORE II',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía de tórax': [
       'Escala De Glance',
@@ -65,7 +78,9 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
-      'Escala De ToracoScore'
+      'TORACOSCORE',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía general': [
       'Escala De Glance',
@@ -74,7 +89,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
-      'EUROSCORE II',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía digestiva oncológica': [
       'Escala De Glance',
@@ -83,6 +99,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía bariátrica': [
       'Escala De Glance',
@@ -91,7 +109,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
-      'Escala De STOP-BANG'
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía ginecológica': [
       'Escala De Glance',
@@ -100,6 +119,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía ortopédica': [
       'Escala De Glance',
@@ -108,7 +129,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
-      'STOP BANG',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía urológica': [
       'Escala De Glance',
@@ -117,6 +139,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
     'Cirugía plástica': [
       'Escala De Glance',
@@ -125,11 +149,15 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
       'Escala Caprini Para Riesgo De Trombosis Venosa',
       'Escala De APFEL',
       'Escala ARISCAT',
+      'Escala De STOP-BANG',
+      'Escala De Barthel'
     ],
   };
 
   @override
   Widget build(BuildContext context) {
+    print('Edad del paciente: ${widget.patientAge}');
+    print('IMC del paciente: ${widget.patientIMC}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Escalas de Riesgo por Cirugía'),
@@ -159,39 +187,49 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
               if (selectedSurgery != null &&
                   surgeryToScales[selectedSurgery!] != null)
                 ...surgeryToScales[selectedSurgery!]!.map((scale) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  // Widget para la escala actual
+                  Widget scaleWidget;
+                  if (scale == 'Escala De Glance') {
+                    scaleWidget = GlanceScaleWidget(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)') {
+                    scaleWidget = LeeScaleWidget(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'Escala De Capacidad Funcional') {
+                    scaleWidget = CapacidadFuncional(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'Escala Caprini Para Riesgo De Trombosis Venosa') {
+                    scaleWidget = Caprini(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'Escala De APFEL') {
+                    scaleWidget = Appel(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'Escala ARISCAT') {
+                    scaleWidget = Ariscat(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'EUROSCORE II') {
+                    scaleWidget = EuroScoreII(onValueUpdated: updateScaleValue);
+                  } else if (scale == 'TORACOSCORE') {
+                    scaleWidget = ToracoScore(onValueUpdated: updateScaleValue);
+                  } else {
+                    scaleWidget = const SizedBox();
+                  }
+                  
+                  // Agregar STOP BANG si el IMC es mayor o igual a 30
+                  if (scale == 'Escala De Barthel' && widget.patientAge > 65) {
+                    scaleWidget = Column(
                       children: [
-                        const SizedBox(height: 10),
-                        // Aquí puedes colocar el widget específico para cada escala
-                        if (scale == 'Escala De Glance')
-                          GlanceScaleWidget(onValueUpdated: updateScaleValue),
-                        if (scale ==
-                            'Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)')
-                          LeeScaleWidget(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala De Capacidad Funcional')
-                          CapacidadFuncional(onValueUpdated: updateScaleValue),
-                        if (scale ==
-                            'Escala Caprini Para Riesgo De Trombosis Venosa')
-                          Caprini(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala De APFEL')
-                          Appel(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala de Barthel')
-                          Barthel(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala ARISCAT')
-                          Ariscat(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala De STOP-BANG')
-                          StopBang(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala De ToracoScore')
-                          ToracoScore(onValueUpdated: updateScaleValue),
-                        if (scale == 'Escala De EuroScore II')
-                          EuroScoreII(onValueUpdated: updateScaleValue),
-                        // Añade más condicionales según sea necesario para otras escalas
+                        scaleWidget,
+                        Barthel(onValueUpdated: updateScaleValue),
                       ],
-                    ),
+                    );
+                  } else if (scale == 'Escala De STOP-BANG' && widget.patientIMC >= 30) {
+                    scaleWidget = Column(
+                      children: [
+                        scaleWidget,
+                        StopBang(onValueUpdated: updateScaleValue),
+                      ],
+                    );
+                  }
+                  
+                  // Retornar el widget de la escala actual
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    child: scaleWidget,
                   );
                 }),
               const SizedBox(height: 20),
@@ -212,6 +250,7 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
     );
   }
 }
+
 
 class GlanceScaleWidget extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
@@ -246,7 +285,7 @@ class _GlanceScaleWidgetState extends State<GlanceScaleWidget> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            dataRowMaxHeight: 300,
+            dataRowMaxHeight: double.infinity,
             columns: const [
               DataColumn(label: Text('RIESGO BAJO (<1%)')),
               DataColumn(label: Text('RIESGO INTERMEDIO  (1-5%)')),
@@ -359,6 +398,7 @@ class _LeeScaleWidgetState extends State<LeeScaleWidget> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
+            dataRowMaxHeight: double.infinity,
             columns: const <DataColumn>[
               DataColumn(
                 label: Text(
@@ -507,7 +547,7 @@ class _CapacidadFuncionalState extends State<CapacidadFuncional> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            dataRowMaxHeight: 150,
+            dataRowMaxHeight: double.infinity,
             columns: const <DataColumn>[
               DataColumn(
                 label: Text(
@@ -602,7 +642,7 @@ class _CapacidadFuncionalState extends State<CapacidadFuncional> {
 class Caprini extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const Caprini({Key? key, required this.onValueUpdated}) : super(key: key);
+  const Caprini({super.key, required this.onValueUpdated});
 
   @override
   State<Caprini> createState() => _CapriniState();
@@ -643,7 +683,7 @@ class _CapriniState extends State<Caprini> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            dataRowMaxHeight: 190,
+            dataRowMaxHeight: double.infinity,
             columnSpacing: 20,
             columns: const <DataColumn>[
               DataColumn(
@@ -730,7 +770,7 @@ class _CapriniState extends State<Caprini> {
                       '- Fractura de cadera, pelvis o pierna'
                       '\n- Infarto'
                       '\n- Politraumatismo'
-                      '\n- Lesión aguda de médula espinal que causa parálisis',
+                      '\n- Lesión aguda de médula\nespinal que causa parálisis',
                     ),
                   ),
                 ],
@@ -738,7 +778,7 @@ class _CapriniState extends State<Caprini> {
               DataRow(
                 cells: <DataCell>[
                   DataCell(
-                    Text('Enfermedad venosa o trastorno de la coagulación'),
+                    Text('Enfermedad venosa \no \ntrastorno de la coagulación'),
                   ),
                   DataCell(Text('')),
                   DataCell(
@@ -782,8 +822,8 @@ class _CapriniState extends State<Caprini> {
                       '\n- Índice de masa corporal > 25'
                       '\n- Infarto agudo al miocardio'
                       '\n- Enfermedad pulmonar obstructiva crónica'
-                      '\n- Otros factores de riesgo: anticonceptivos orales o reemplazo hormonal'
-                      '\n- ≥3 abortos espontáneos o nacimiento prematuro con toxemia '
+                      '\n- Otros factores de riesgo: \n -anticonceptivos orales \n-Reemplazo hormonal'
+                      '\n- ≥3 abortos espontáneos \no nacimiento prematuro con toxemia '
                       '\no lactante con retraso del crecimiento',
                     ),
                   ),
@@ -956,7 +996,7 @@ class _AppelState extends State<Appel> {
 class Barthel extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const Barthel({Key? key, required this.onValueUpdated}) : super(key: key);
+  const Barthel({super.key, required this.onValueUpdated});
 
   @override
   State<Barthel> createState() => _BarthelState();
@@ -986,6 +1026,7 @@ class _BarthelState extends State<Barthel> {
 
   Widget _buildDataTable() {
     return DataTable(
+      dataRowMaxHeight: double.infinity,
       columns: const [
         DataColumn(label: Text('Puntos')),
         DataColumn(label: Text('Clasificación')),
@@ -1033,60 +1074,58 @@ class _AriscatState extends State<Ariscat> {
   Widget build(BuildContext context) {
     return Column(
           children: [
-            Text(
+            const Text(
               'Escala De ARISCAT',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columnSpacing: 8,
-                columns: [
-                  DataColumn(label: Text('Factor de riesgo')),
-                  DataColumn(label: Text('')),
-                  DataColumn(label: Text('Puntos')),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Edad, años'))),
-                    DataCell(Center(child: Text('<50\n51-80\n>80'))),
-                    DataCell(Center(child: Text('0\n3\n16'))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Saturación parcial de oxígeno preoperatorio'))),
-                    DataCell(Center(child: Text('>96%\n91-95%\n<90%'))),
-                    DataCell(Center(child: Text('0\n8\n24'))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Infección respiratoria en el último mes'))),
-                    DataCell(Center(child: Text('No\nSi'))),
-                    DataCell(Center(child: Text('0\n17'))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Anemia preoperatoria (< 10g/dL)'))),
-                    DataCell(Center(child: Text('No\nSi'))),
-                    DataCell(Center(child: Text('0\n11'))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Incisión quirúrgica'))),
-                    DataCell(Center(child: Text('Periférica\nAbdomen superior\nTorácica'))),
-                    DataCell(Center(child: Text('0\n15\n24'))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Duración de la cirugía'))),
-                    DataCell(Center(child: Text('< 2horas\n2 a 3 horas\n>3 horas'))),
-                    DataCell(Center(child: Text('0\n16\n23'))),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Center(child: Text('Procedimiento de emergencia'))),
-                    DataCell(Center(child: Text('No\nSi'))),
-                    DataCell(Center(child: Text('0\n8'))),
-                  ]),
-                ],
-              ),
+            DataTable(
+              dataRowMaxHeight: double.infinity,
+              columnSpacing: 8,
+              columns: const [
+                DataColumn(label: Text('Factor de riesgo')),
+                DataColumn(label: Text('')),
+                DataColumn(label: Text('Puntos')),
+              ],
+              rows: const [
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Edad, años'))),
+                  DataCell(Center(child: Text('<50\n51-80\n>80'))),
+                  DataCell(Center(child: Text('0\n3\n16'))),
+                ]),
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Saturación parcial de oxígeno preoperatorio'))),
+                  DataCell(Center(child: Text('>96%\n91-95%\n<90%'))),
+                  DataCell(Center(child: Text('0\n8\n24'))),
+                ]),
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Infección respiratoria en el último mes'))),
+                  DataCell(Center(child: Text('No\nSi'))),
+                  DataCell(Center(child: Text('0\n17'))),
+                ]),
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Anemia preoperatoria (< 10g/dL)'))),
+                  DataCell(Center(child: Text('No\nSi'))),
+                  DataCell(Center(child: Text('0\n11'))),
+                ]),
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Incisión quirúrgica'))),
+                  DataCell(Center(child: Text('Periférica\nAbdomen superior\nTorácica'))),
+                  DataCell(Center(child: Text('0\n15\n24'))),
+                ]),
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Duración de la cirugía'))),
+                  DataCell(Center(child: Text('< 2horas\n2 a 3 horas\n>3 horas'))),
+                  DataCell(Center(child: Text('0\n16\n23'))),
+                ]),
+                DataRow(cells: [
+                  DataCell(Center(child: Text('Procedimiento de emergencia'))),
+                  DataCell(Center(child: Text('No\nSi'))),
+                  DataCell(Center(child: Text('0\n8'))),
+                ]),
+              ],
             ),
           ],
         );
@@ -1099,39 +1138,132 @@ class _AriscatState extends State<Ariscat> {
 class StopBang extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const StopBang({super.key, required this.onValueUpdated});
+  const StopBang({Key? key, required this.onValueUpdated}) : super(key: key);
 
   @override
   State<StopBang> createState() => _StopBangState();
 }
 
 class _StopBangState extends State<StopBang> {
-  TextEditingController textFieldController = TextEditingController();
+  Map<String, bool> answers = {
+    'S': false,
+    'T': false,
+    'O': false,
+    'P': false,
+    'B': false,
+    'A': false,
+    'N': false,
+    'G': false,
+  };
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Escala De STOP-BANG',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Escala De STOP-BANG',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
         ),
-        const SizedBox(height: 20),
-        TextField(
-          controller: textFieldController,
-          decoration: const InputDecoration(
-            hintText: 'Ingrese un valor',
-            border: OutlineInputBorder(),
-          ),
+        DataTable(
+          dataRowMaxHeight: double.infinity,
+          columns: [
+            DataColumn(label: Text('Pregunta')),
+            DataColumn(label: Text('Descripción')),
+          ],
+          rows: answers.keys.map((key) {
+            return DataRow(
+              cells: [
+                DataCell(Text(key)),
+                DataCell(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _getSubtitleByKey(key),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(_getDescriptionByKey(key)),
+                    ],
+                  ),
+                ),
+              ],
+              selected: answers[key]!,
+              onSelectChanged: (selected) {
+                setState(() {
+                  answers[key] = selected!;
+                  _updateRisk();
+                });
+              },
+            );
+          }).toList(),
         ),
-        // Aquí puedes agregar los campos y la tabla para la Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)
       ],
     );
   }
+
+  String _getSubtitleByKey(String key) {
+    switch (key) {
+      case 'S':
+        return 'Snore';
+      case 'T':
+        return 'Tired';
+      case 'O':
+        return 'Observed apnea';
+      case 'P':
+        return 'Pressure';
+      case 'B':
+        return 'Body mass index';
+      case 'A':
+        return 'Age';
+      case 'N':
+        return 'Neck';
+      case 'G':
+        return 'Gender';
+      default:
+        return '';
+    }
+  }
+
+  String _getDescriptionByKey(String key) {
+    switch (key) {
+      case 'S':
+        return '¿Usted ronca alto?, ¿más alto que en una conversación o tan alto que es posible oírlo con la puerta cerrada?';
+      case 'T':
+        return '¿Usted está siempre cansado?, ¿duerme durante el día?';
+      case 'O':
+        return '¿Le han comentado que parece que deja de respirar cuando está dormido?';
+      case 'P':
+        return '¿Sufre de presión alta?, ¿usted es hipertenso?';
+      case 'B':
+        return 'Índice de masa corporal > 35 kg/m2';
+      case 'A':
+        return 'Edad por encima de los 50 años';
+      case 'N':
+        return 'Circunferencia de cuello mayor a 40 cm';
+      case 'G':
+        return 'Masculino';
+      default:
+        return '';
+    }
+  }
+
+  void _updateRisk() {
+    int positiveAnswers = answers.values.where((element) => element).length;
+    if (positiveAnswers > 3) {
+      widget.onValueUpdated('Escala De STOP-BANG: ','Alto Riesgo');
+    } else {
+      widget.onValueUpdated('Escala De STOP-BANG: ','Bajo Riesgo');
+    }
+  }
 }
+
 
 class ToracoScore extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
