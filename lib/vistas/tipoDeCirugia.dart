@@ -1136,7 +1136,7 @@ class _AriscatState extends State<Ariscat> {
 class StopBang extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const StopBang({Key? key, required this.onValueUpdated}) : super(key: key);
+  const StopBang({super.key, required this.onValueUpdated});
 
   @override
   State<StopBang> createState() => _StopBangState();
@@ -1159,8 +1159,8 @@ class _StopBangState extends State<StopBang> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Text(
             'Escala De STOP-BANG',
             style: TextStyle(
@@ -1171,7 +1171,7 @@ class _StopBangState extends State<StopBang> {
         ),
         DataTable(
           dataRowMaxHeight: double.infinity,
-          columns: [
+          columns: const [
             DataColumn(label: Text('Pregunta')),
             DataColumn(label: Text('Descripción')),
           ],
@@ -1185,7 +1185,7 @@ class _StopBangState extends State<StopBang> {
                     children: [
                       Text(
                         _getSubtitleByKey(key),
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(_getDescriptionByKey(key)),
                     ],
@@ -1267,7 +1267,7 @@ class _StopBangState extends State<StopBang> {
 class ToracoScore extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const ToracoScore({Key? key, required this.onValueUpdated}) : super(key: key);
+  const ToracoScore({super.key, required this.onValueUpdated});
 
   @override
   State<ToracoScore> createState() => _ToracoScoreState();
@@ -1293,14 +1293,14 @@ class _ToracoScoreState extends State<ToracoScore> {
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columnSpacing: 20.0,
-            columns: [
+            columns: const [
               DataColumn(label: Text('Factor de riesgo')),
               DataColumn(label: Text('')),
               DataColumn(label: Text('')),
               DataColumn(label: Text('')),
               DataColumn(label: Text('Puntos')),
             ],
-            rows: [
+            rows: const [
               DataRow(cells: [
                 DataCell(Text('Grupo de edad')),
                 DataCell(Text('< 55 años')),
