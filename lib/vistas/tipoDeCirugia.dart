@@ -156,6 +156,8 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    print('Edad del paciente: ${widget.patientAge}');
+    print('IMC del paciente: ${widget.patientIMC}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Escalas de Riesgo por Cirugía'),
@@ -647,274 +649,466 @@ class Caprini extends StatefulWidget {
 }
 
 class _CapriniState extends State<Caprini> {
-  String? selectedRiskFactor;
+  String? selectedAge;
+  String? selectedSurgeryType;
+  int puntosTotales = 0;
+  int nuevosPuntos = 0;
+  
 
-  DataRow _buildDataRow(List<String> data) {
-    return DataRow(
-      selected: selectedRiskFactor == data[0],
-      onSelectChanged: (selected) {
-        if (selected != null && selected) {
-          setState(() {
-            selectedRiskFactor = data[0];
-          });
-          widget.onValueUpdated(
-            'Escala Caprini Para Riesgo De Trombosis Venosa',
-            'Puntos: ${data[0]}, Categoría: ${data[1]}, Riesgo: ${data[2]}, Recomendaciones: ${data[3]}, Quimioprofilaxis: ${data[4]}',
-          );
-        }
-      },
-      cells: data.map((text) => DataCell(Text(text))).toList(),
-    );
+  bool cirugiaMayor = false;
+  bool insuficienciaCardiaca = false;
+  bool sepsis = false;
+  bool neumonia = false;
+  bool embarazoPostparto = false;
+  bool yesoInmovilizador = false;
+  bool fracturaCadera = false;
+  bool infarto = false;
+  bool politraumatismo = false;
+  bool lesionMedulaEspinal = false;
+
+  bool venasVaricosas = false;
+  bool edemaPelvico = false;
+  bool accesoVenosoCentral = false;
+  bool antecedentesTVP_EP = false;
+  bool antecedentesFamiliaresTrombosis = false;
+  bool factorVLeiden = false;
+  bool homocisteinaElevada = false;
+  bool anticoagulanteLupico = false;
+  bool anticuerposAnticardiolipina = false;
+  bool trombocitopeniaInducidaHeparina = false;
+  bool otraTrombofilia = false;
+
+  bool padecimientoMedico = false;
+  bool pacienteConfinadoCama = false;
+
+  bool antecedentesEnfermedadInflamatoria = false;
+  bool indiceMasaCorporal = false;
+  bool infartoMiocardio = false;
+  bool enfermedadPulmonarObstructiva = false;
+  bool otrosFactoresRiesgo = false;
+
+String calcularCategoria(int puntos) {
+    if (puntos == 0) {
+      return 'Muy bajo';
+    } else if (puntos <= 2) {
+      return 'Bajo';
+    } else if (puntos <= 4) {
+      return 'Moderado';
+    } else if (puntos <= 6) {
+      return 'Alto';
+    } else if (puntos <= 8) {
+      return 'Alto';
+    } else {
+      return 'Muy Alto';
+    }
+  }
+
+  String calcularRiesgo(int puntos) {
+    if (puntos == 0) {
+      return 'Mínimo';
+    } else if (puntos <= 2) {
+      return 'Mínimo';
+    } else if (puntos <= 4) {
+      return '0.7%';
+    } else if (puntos <= 6) {
+      return '1.8%';
+    } else if (puntos <= 8) {
+      return '4%';
+    } else {
+      return '10.7%';
+    }
+  }
+
+  String calcularRecomendaciones(int puntos) {
+    if (puntos == 0) {
+      return 'Deambulación precoz o con ayuda del equipo\n▪ Dispositivos de compresión neumática o medias de compresión graduada';
+    } else if (puntos <= 2) {
+      return 'Dispositivos de compresión neumática con o sin medias de compresión graduada';
+    } else if (puntos <= 4) {
+      return 'Dispositivos de compresión neumática con o sin medias de compresión graduada';
+    } else if (puntos <= 6) {
+      return 'Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular';
+    } else if (puntos <= 8) {
+      return 'Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular';
+    } else {
+      return 'Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular';
+    }
+  }
+
+
+  void _actualizarPuntos() {
+    puntosTotales = 0;
+    nuevosPuntos = 0;
+
+
+    // Calcular puntos para la edad
+    switch (selectedAge) {
+      case '<40':
+        puntosTotales += 0;
+        break;
+      case '41-60':
+        puntosTotales += 1;
+        break;
+      case '61-74':
+        puntosTotales += 2;
+        break;
+      case '>75':
+        puntosTotales += 3;
+        break;
+    }
+
+    // Calcular puntos para el tipo de cirugía
+    switch (selectedSurgeryType) {
+      case 'Menor':
+        puntosTotales += 1;
+        break;
+      case '>45 min':
+        puntosTotales += 2;
+        break;
+      case 'Laparoscópica':
+        puntosTotales += 2;
+        break;
+      case 'Artroplastia':
+        puntosTotales += 5;
+        break;
+    }
+
+        puntosTotales = nuevosPuntos;
+
+    String categoria = calcularCategoria(puntosTotales);
+    String riesgo = calcularRiesgo(puntosTotales);
+    String recomendaciones = calcularRecomendaciones(puntosTotales);
+
+
+
+    // Calcular puntos para las preguntas
+    puntosTotales += (cirugiaMayor ? 1 : 0) +
+        (insuficienciaCardiaca ? 1 : 0) +
+        (sepsis ? 1 : 0) +
+        (neumonia ? 1 : 0) +
+        (embarazoPostparto ? 1 : 0) +
+        (yesoInmovilizador ? 2 : 0) +
+        (fracturaCadera ? 5 : 0) +
+        (infarto ? 5 : 0) +
+        (politraumatismo ? 5 : 0) +
+        (lesionMedulaEspinal ? 5 : 0) +
+        (venasVaricosas ? 1 : 0) +
+        (edemaPelvico ? 1 : 0) +
+        (accesoVenosoCentral ? 2 : 0) +
+        (antecedentesTVP_EP ? 3 : 0) +
+        (antecedentesFamiliaresTrombosis ? 3 : 0) +
+        (factorVLeiden ? 3 : 0) +
+        (homocisteinaElevada ? 3 : 0) +
+        (anticoagulanteLupico ? 3 : 0) +
+        (anticuerposAnticardiolipina ? 3 : 0) +
+        (trombocitopeniaInducidaHeparina ? 3 : 0) +
+        (otraTrombofilia ? 3 : 0) +
+        (padecimientoMedico ? 1 : 0) +
+        (pacienteConfinadoCama ? 2 : 0) +
+        (antecedentesEnfermedadInflamatoria ? 5 : 0) +
+        (indiceMasaCorporal ? 5 : 0) +
+        (infartoMiocardio ? 5 : 0) +
+        (enfermedadPulmonarObstructiva ? 5 : 0) +
+        (otrosFactoresRiesgo ? 5 : 0);
+
+        String resultados =
+        'Escala de Caprini: $puntosTotales puntos, riesgo $categoria ($riesgo) para presentar trombosis venosa, se recomienda $recomendaciones.';
+    widget.onValueUpdated('Escala de Caprini', resultados);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Escala Caprini Para Riesgo De Trombosis Venosa',
+          'Escala De Caprini Para Riesgo De Trombosis Venosa',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            dataRowMaxHeight: double.infinity,
-            columnSpacing: 20,
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text(
-                  'PUNTOS',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  '0',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  '1',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  '2',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  '3',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  '5',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-            rows: const <DataRow>[
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Edad (Años)')),
-                  DataCell(Text('<40')),
-                  DataCell(Text('41-60')),
-                  DataCell(Text('61-74')),
-                  DataCell(Text('>75')),
-                  DataCell(Text('')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Tipo de cirugía')),
-                  DataCell(Text('')),
-                  DataCell(Text('Menor')),
-                  DataCell(
-                    Text(
-                      '- >45 min\n- Laparoscópica >45 min\n- Artroscópica',
-                    ),
-                  ),
-                  DataCell(Text('')),
-                  DataCell(
-                    Text(
-                      'Artroplastia electiva mayor de extremidades inferiores',
-                    ),
-                  ),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Reciente <mes')),
-                  DataCell(Text('')),
-                  DataCell(
-                    Text('- Cirugía mayor'
-                        '\n- Insuficiencia cardiaca congestiva'
-                        '\n- Sepsis'
-                        '\n- Neumonía'
-                        '\n- Embarazo o posparto'),
-                  ),
-                  DataCell(Text('Yeso inmovilizador')),
-                  DataCell(Text('')),
-                  DataCell(
-                    Text(
-                      '- Fractura de cadera, pelvis o pierna'
-                      '\n- Infarto'
-                      '\n- Politraumatismo'
-                      '\n- Lesión aguda de médula\nespinal que causa parálisis',
-                    ),
-                  ),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(
-                    Text('Enfermedad venosa \no \ntrastorno de la coagulación'),
-                  ),
-                  DataCell(Text('')),
-                  DataCell(
-                    Text('- Venas varicosas\n- Edema de miembros pélvicos'),
-                  ),
-                  DataCell(Text('Acceso venoso central actual')),
-                  DataCell(
-                    Text('- Antecedentes de TVP / EP'
-                        '\n- Antecedentes familiares de trombosis'
-                        '\n- Factor V Leiden positivo'
-                        '\n- Homocisteína sérica elevada'
-                        '\n- Anticoagulante lúpico positivo'
-                        '\n- Anticuerpos anticardiolipina elevados'
-                        '\n- Trombocitopenia inducida por heparina'
-                        '\n- Otra trombofilia congénita o adquirida'),
-                  ),
-                  DataCell(Text('')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Morbilidades')),
-                  DataCell(Text('')),
-                  DataCell(
-                    Text(
-                      'Padecimiento médico actualmente en reposo en cama',
-                    ),
-                  ),
-                  DataCell(Text('Paciente confinado en cama > 72 horas')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('Otros')),
-                  DataCell(Text('')),
-                  DataCell(
-                    Text(
-                      '- Antecedentes de enfermedad inflamatoria intestinal'
-                      '\n- Índice de masa corporal > 25'
-                      '\n- Infarto agudo al miocardio'
-                      '\n- Enfermedad pulmonar obstructiva crónica'
-                      '\n- Otros factores de riesgo: \n -anticonceptivos orales \n-Reemplazo hormonal'
-                      '\n- ≥3 abortos espontáneos \no nacimiento prematuro con toxemia '
-                      '\no lactante con retraso del crecimiento',
-                    ),
-                  ),
-                  DataCell(Text('Neoplasia maligna actual o previa')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                ],
-              ),
-            ],
-          ),
+        DropdownButton<String>(
+          hint: const Text('Selecciona una edad'),
+          value: selectedAge,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedAge = newValue;
+              _actualizarPuntos();
+            });
+          },
+          items: <String>[
+            '<40',
+            '41-60',
+            '61-74',
+            '>75',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         ),
-        const SizedBox(height: 20),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text(
-                  'PUNTOS',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'CATEGORÍA',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'RIESGO',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'RECOMENDACIONES',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'QUIMIOPROFILAXIS',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-            rows: <DataRow>[
-              _buildDataRow([
-                '0',
-                'Muy bajo',
-                'Mínimo',
-                '- Deambulación precoz o con ayuda del equipo\n- Dispositivos de compresión neumática o medias de compresión graduada',
-                'Hospitalización'
-              ]),
-              _buildDataRow([
-                '1-2',
-                'Bajo',
-                'Mínimo',
-                'Dispositivos de compresión neumática con o sin medias de compresión graduada',
-                'Hospitalización'
-              ]),
-              _buildDataRow([
-                '3-4',
-                'Moderado',
-                '0.7%',
-                'Dispositivos de compresión neumática con o sin medias de compresión graduada',
-                'Hospitalización'
-              ]),
-              _buildDataRow([
-                '5-6',
-                'Alto',
-                '1.8%',
-                'Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular',
-                '7-10 días'
-              ]),
-              _buildDataRow([
-                '7-8',
-                'Alto',
-                '4%',
-                'Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular',
-                '7-10 días'
-              ]),
-              _buildDataRow([
-                '>9',
-                'Muy alto',
-                '10.7%',
-                'Dispositivos de compresión neumática con dosis baja de heparina o heparina de bajo peso molecular',
-                '30 días'
-              ]),
-            ],
-          ),
+        SizedBox(height: 20),
+        DropdownButton<String>(
+          hint: const Text('Selecciona un tipo de cirugía'),
+          value: selectedSurgeryType,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedSurgeryType = newValue;
+              _actualizarPuntos();
+            });
+          },
+          items: <String>[
+            'Menor',
+            '>45 min',
+            'Laparoscópica',
+            'Artroplastia',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         ),
+        SizedBox(height: 20),
+        Text('Preguntas:'),
+        CheckboxListTile(
+          title: Text('¿Cirugía mayor?'),
+          value: cirugiaMayor,
+          onChanged: (bool? value) {
+            setState(() {
+              cirugiaMayor = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Insuficiencia cardiaca congestiva?'),
+          value: insuficienciaCardiaca,
+          onChanged: (bool? value) {
+            setState(() {
+              insuficienciaCardiaca = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Sepsis?'),
+          value: sepsis,
+          onChanged: (bool? value) {
+            setState(() {
+              sepsis = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Neumonía?'),
+          value: neumonia,
+          onChanged: (bool? value) {
+            setState(() {
+              neumonia = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Embarazo y postparto?'),
+          value: embarazoPostparto,
+          onChanged: (bool? value) {
+            setState(() {
+              embarazoPostparto = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        Text('Enfermedad venosa o trastorno de la coagulación:'),
+        CheckboxListTile(
+          title: Text('¿Venas varicosas?'),
+          value: venasVaricosas,
+          onChanged: (bool? value) {
+            setState(() {
+              venasVaricosas = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Edema de miembros pélvicos?'),
+          value: edemaPelvico,
+          onChanged: (bool? value) {
+            setState(() {
+              edemaPelvico = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Acceso venoso central actual?'),
+          value: accesoVenosoCentral,
+          onChanged: (bool? value) {
+            setState(() {
+              accesoVenosoCentral = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Antecedentes de TVP / EP?'),
+          value: antecedentesTVP_EP,
+          onChanged: (bool? value) {
+            setState(() {
+              antecedentesTVP_EP = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Antecedentes familiares de trombosis?'),
+          value: antecedentesFamiliaresTrombosis,
+          onChanged: (bool? value) {
+            setState(() {
+              antecedentesFamiliaresTrombosis = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Factor V Leiden positivo?'),
+          value: factorVLeiden,
+          onChanged: (bool? value) {
+            setState(() {
+              factorVLeiden = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Homocisteína sérica elevada?'),
+          value: homocisteinaElevada,
+          onChanged: (bool? value) {
+            setState(() {
+              homocisteinaElevada = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Anticoagulante lúpico positivo?'),
+          value: anticoagulanteLupico,
+          onChanged: (bool? value) {
+            setState(() {
+              anticoagulanteLupico = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Anticuerpos anticardiolipina elevados?'),
+          value: anticuerposAnticardiolipina,
+          onChanged: (bool? value) {
+            setState(() {
+              anticuerposAnticardiolipina = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Trombocitopenia inducida por heparina?'),
+          value: trombocitopeniaInducidaHeparina,
+          onChanged: (bool? value) {
+            setState(() {
+              trombocitopeniaInducidaHeparina = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Otra trombofilia congénita o adquirida?'),
+          value: otraTrombofilia,
+          onChanged: (bool? value) {
+            setState(() {
+              otraTrombofilia = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        Text('Morbilidades:'),
+        CheckboxListTile(
+          title: Text('¿Padecimiento médico, actualmente en reposo en cama?'),
+          value: padecimientoMedico,
+          onChanged: (bool? value) {
+            setState(() {
+              padecimientoMedico = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Paciente confinado en cama > 72 horas?'),
+          value: pacienteConfinadoCama,
+          onChanged: (bool? value) {
+            setState(() {
+              pacienteConfinadoCama = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        Text('Otros:'),
+        CheckboxListTile(
+          title: Text('¿Antecedentes de enfermedad inflamatoria intestinal?'),
+          value: antecedentesEnfermedadInflamatoria,
+          onChanged: (bool? value) {
+            setState(() {
+              antecedentesEnfermedadInflamatoria = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Índice de masa corporal > 25?'),
+          value: indiceMasaCorporal,
+          onChanged: (bool? value) {
+            setState(() {
+              indiceMasaCorporal = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Infarto agudo al miocardio?'),
+          value: infartoMiocardio,
+          onChanged: (bool? value) {
+            setState(() {
+              infartoMiocardio = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Enfermedad pulmonar obstructiva crónica?'),
+          value: enfermedadPulmonarObstructiva,
+          onChanged: (bool? value) {
+            setState(() {
+              enfermedadPulmonarObstructiva = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: Text('¿Otros factores de riesgo? (anticonceptivos orales o reemplazo hormonal, ≥3 abortos espontáneos o nacimiento prematuro con toxemia o lactante con retraso del crecimiento)'),
+          value: otrosFactoresRiesgo,
+          onChanged: (bool? value) {
+            setState(() {
+              otrosFactoresRiesgo = value!;
+              _actualizarPuntos();
+            });
+          },
+        ),
+        SizedBox(height: 20),
+        Text('Puntos Totales: $puntosTotales'),
       ],
     );
   }
@@ -1092,7 +1286,7 @@ class _AriscatState extends State<Ariscat> {
                   DataCell(Center(child: Text('Edad, años'))),
                   DataCell(Center(child: Text('<50\n51-80\n>80'))),
                   DataCell(Center(child: Text('0\n3\n16'))),
-                ]), 
+                ]),
                 DataRow(cells: [
                   DataCell(Center(child: Text('Saturación parcial de oxígeno preoperatorio'))),
                   DataCell(Center(child: Text('>96%\n91-95%\n<90%'))),
@@ -1136,7 +1330,7 @@ class _AriscatState extends State<Ariscat> {
 class StopBang extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const StopBang({super.key, required this.onValueUpdated});
+  const StopBang({Key? key, required this.onValueUpdated}) : super(key: key);
 
   @override
   State<StopBang> createState() => _StopBangState();
@@ -1159,8 +1353,8 @@ class _StopBangState extends State<StopBang> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             'Escala De STOP-BANG',
             style: TextStyle(
@@ -1171,7 +1365,7 @@ class _StopBangState extends State<StopBang> {
         ),
         DataTable(
           dataRowMaxHeight: double.infinity,
-          columns: const [
+          columns: [
             DataColumn(label: Text('Pregunta')),
             DataColumn(label: Text('Descripción')),
           ],
@@ -1185,7 +1379,7 @@ class _StopBangState extends State<StopBang> {
                     children: [
                       Text(
                         _getSubtitleByKey(key),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(_getDescriptionByKey(key)),
                     ],
@@ -1263,7 +1457,6 @@ class _StopBangState extends State<StopBang> {
 }
 
 
-
 class ToracoScore extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
@@ -1287,218 +1480,19 @@ class _ToracoScoreState extends State<ToracoScore> {
             fontSize: 18,
           ),
         ),
-      
         const SizedBox(height: 20),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columnSpacing: 20.0,
-            columns: const [
-              DataColumn(label: Text('Factor de riesgo')),
-              DataColumn(label: Text('')),
-              DataColumn(label: Text('')),
-              DataColumn(label: Text('')),
-              DataColumn(label: Text('Puntos')),
-            ],
-            rows: const [
-              DataRow(cells: [
-                DataCell(Text('Grupo de edad')),
-                DataCell(Text('< 55 años')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Entre 55 a 65 años')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('> 65 años')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('2')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Sexo')),
-                DataCell(Text('Femenino')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Masculino')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Estado Físico')),
-                DataCell(Text('Estado funcional menor o igual a 2')),
-                DataCell(Text('')),
-                DataCell(Text('0.  Actividad normal')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1.  Síntomas,  pero  casi completamente ambulatorio')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('2.  Algún  tiempo  en  la  cama, pero menos de la mitad del día')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Estado funcional  mayor o igual a 3')),
-                DataCell(Text('')),
-                DataCell(Text('3.  Necesita  encamamiento mayor  del  50%  del  tiempo diario')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('4.  Imposible  que  pueda levantarse de la cama')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Riesgo ASA')),
-                DataCell(Text('Menor o igual a 2')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Mayor o igual a 3')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Puntuación disnea')),
-                DataCell(Text('Menor o igual a 2')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 0: No disnea')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 1: Disnea leve')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 2: Disnea Moderada')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Mayor o igual a 3')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 3: Disnea moderada a severa')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 4: Disnea severa')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 5: Disnea muy severa')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Tipo de cirugía')),
-                DataCell(Text('Cirugía Electiva')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Cirugía urgente o emergente')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Tipo de intervención')),
-                DataCell(Text('Intervención: Neumectomía')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Si Intervención: Otras')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Grupo de diagnóstico')),
-                DataCell(Text('Benigno')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Maligno')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Número de comorbilidades')),
-                DataCell(Text('Ninguna comorbilidad')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Hasta 2 comorbilidades')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('3 o más comorbilidades')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('2')),
-              ]),
-            ],
+        TextField(
+          controller: textFieldController,
+          decoration: const InputDecoration(
+            hintText: 'Ingrese un valor',
+            border: OutlineInputBorder(),
           ),
         ),
+        // Aquí puedes agregar los campos y la tabla para la Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)
       ],
     );
   }
-
 }
-
 
 class EuroScoreII extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
