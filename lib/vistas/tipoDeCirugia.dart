@@ -1,3 +1,4 @@
+import 'package:app_medica/vistas/antecedentesPersonales.dart';
 import 'package:flutter/material.dart';
 
 
@@ -238,6 +239,9 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
                   scaleValues.forEach((scale, value) {
                     print('$scale: $value');
                   });
+                  Navigator.push(context, 
+                          MaterialPageRoute(builder: (context) => const antecedentesPersonales())
+);
                 },
                 child: const Text('Calcular Riesgo'),
               ),
@@ -1264,18 +1268,17 @@ class _StopBangState extends State<StopBang> {
 
 
 
+
 class ToracoScore extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const ToracoScore({super.key, required this.onValueUpdated});
+  const ToracoScore({Key? key, required this.onValueUpdated}) : super(key: key);
 
   @override
   State<ToracoScore> createState() => _ToracoScoreState();
 }
 
 class _ToracoScoreState extends State<ToracoScore> {
-  TextEditingController textFieldController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -1287,209 +1290,46 @@ class _ToracoScoreState extends State<ToracoScore> {
             fontSize: 18,
           ),
         ),
-      
         const SizedBox(height: 20),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            columnSpacing: 20.0,
             columns: const [
               DataColumn(label: Text('Factor de riesgo')),
-              DataColumn(label: Text('')),
-              DataColumn(label: Text('')),
-              DataColumn(label: Text('')),
+              DataColumn(label: Text('Opciones')),
               DataColumn(label: Text('Puntos')),
             ],
-            rows: const [
-              DataRow(cells: [
-                DataCell(Text('Grupo de edad')),
-                DataCell(Text('< 55 años')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Entre 55 a 65 años')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('> 65 años')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('2')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Sexo')),
-                DataCell(Text('Femenino')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Masculino')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Estado Físico')),
-                DataCell(Text('Estado funcional menor o igual a 2')),
-                DataCell(Text('')),
-                DataCell(Text('0.  Actividad normal')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1.  Síntomas,  pero  casi completamente ambulatorio')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('2.  Algún  tiempo  en  la  cama, pero menos de la mitad del día')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Estado funcional  mayor o igual a 3')),
-                DataCell(Text('')),
-                DataCell(Text('3.  Necesita  encamamiento mayor  del  50%  del  tiempo diario')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('4.  Imposible  que  pueda levantarse de la cama')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Riesgo ASA')),
-                DataCell(Text('Menor o igual a 2')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Mayor o igual a 3')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Puntuación disnea')),
-                DataCell(Text('Menor o igual a 2')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 0: No disnea')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 1: Disnea leve')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 2: Disnea Moderada')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Mayor o igual a 3')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 3: Disnea moderada a severa')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 4: Disnea severa')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('Categoría 5: Disnea muy severa')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Tipo de cirugía')),
-                DataCell(Text('Cirugía Electiva')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Cirugía urgente o emergente')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Tipo de intervención')),
-                DataCell(Text('Intervención: Neumectomía')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Si Intervención: Otras')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Grupo de diagnóstico')),
-                DataCell(Text('Benigno')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Maligno')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('Número de comorbilidades')),
-                DataCell(Text('Ninguna comorbilidad')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('0')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('Hasta 2 comorbilidades')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('1')),
-              ]),
-              DataRow(cells: [
-                DataCell(Text('')),
-                DataCell(Text('3 o más comorbilidades')),
-                DataCell(Text('')),
-                DataCell(Text('')),
-                DataCell(Text('2')),
-              ]),
+            rows: [
+              _buildDataRow('Grupo de edad', '< 55 años', '0'),
+              _buildDataRow('Grupo de edad', 'Entre 55 a 65 años', '1'),
+              _buildDataRow('Grupo de edad', '> 65 años', '2'),
+              _buildDataRow('Sexo', 'Femenino', '0'),
+              _buildDataRow('Sexo', 'Masculino', '1'),
+              _buildDataRow('Estado Físico', 'Estado funcional menor o igual a 2', '0'),
+              _buildDataRow('Estado Físico', 'Actividad normal', '0'),
+              _buildDataRow('Estado Físico', 'Síntomas, pero casi completamente ambulatorio', '0'),
+              _buildDataRow('Estado Físico', 'Algún tiempo en la cama, pero menos de la mitad del día', '0'),
+              _buildDataRow('Estado Físico', 'Estado funcional mayor o igual a 3', '1'),
+              _buildDataRow('Estado Físico', 'Necesita encamamiento mayor del 50% del tiempo diario', '1'),
+              _buildDataRow('Estado Físico', 'Imposible que pueda levantarse de la cama', '1'),
+              _buildDataRow('Riesgo ASA', 'Menor o igual a 2', '0'),
+              _buildDataRow('Riesgo ASA', 'Mayor o igual a 3', '1'),
+              _buildDataRow('Puntuación disnea', 'Menor o igual a 2', '0'),
+              _buildDataRow('Puntuación disnea', 'No disnea', '0'),
+              _buildDataRow('Puntuación disnea', 'Disnea leve', '0'),
+              _buildDataRow('Puntuación disnea', 'Disnea Moderada', '0'),
+              _buildDataRow('Puntuación disnea', 'Disnea moderada a severa', '1'),
+              _buildDataRow('Puntuación disnea', 'Disnea severa', '1'),
+              _buildDataRow('Puntuación disnea', 'Disnea muy severa', '1'),
+              _buildDataRow('Tipo de cirugía', 'Cirugía Electiva', '0'),
+              _buildDataRow('Tipo de cirugía', 'Cirugía urgente o emergente', '1'),
+              _buildDataRow('Tipo de intervención', 'Intervención: Neumectomía', '1'),
+              _buildDataRow('Tipo de intervención', 'Si Intervención: Otras', '0'),
+              _buildDataRow('Grupo de diagnóstico', 'Benigno', '0'),
+              _buildDataRow('Grupo de diagnóstico', 'Maligno', '1'),
+              _buildDataRow('Número de comorbilidades', 'Ninguna comorbilidad', '0'),
+              _buildDataRow('Número de comorbilidades', 'Hasta 2 comorbilidades', '1'),
+              _buildDataRow('Número de comorbilidades', '3 o más comorbilidades', '2'),
             ],
           ),
         ),
@@ -1497,7 +1337,15 @@ class _ToracoScoreState extends State<ToracoScore> {
     );
   }
 
+  DataRow _buildDataRow(String factor, String opciones, String puntos) {
+    return DataRow(cells: [
+      DataCell(Text(factor)),
+      DataCell(Text(opciones)),
+      DataCell(Text(puntos)),
+    ]);
+  }
 }
+
 
 
 class EuroScoreII extends StatefulWidget {

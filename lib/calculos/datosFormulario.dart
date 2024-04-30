@@ -47,6 +47,9 @@ class datosFormulario with ChangeNotifier{
   String? rxTorax;
   String? otroAyudaDiagnostica;
 
+  int getEdad () {
+    return edad;}
+
    // Métodos para actualizar los cálculos
   void updateIMC(double peso, double altura) {
     imc = CalculosApp.calcularIMC(peso, altura);

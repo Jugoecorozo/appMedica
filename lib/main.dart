@@ -1,4 +1,5 @@
 import 'package:app_medica/calculos/datosFormulario.dart';
+import 'package:app_medica/vistas/datosPersonales.dart';
 import 'package:app_medica/vistas/tipoDeCirugia.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: miTemaClaro,
       darkTheme: miTemaOscuro,
-      home: const SurgeryRiskCalculator(patientAge: 20, patientIMC: 30,),
-    );
+      home: datosPersonales()    
+      );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:app_medica/calculos/datosFormulario.dart';
+import 'package:app_medica/modelos/modeloDeDatos.dart';
 import 'package:app_medica/vistas/antecedentesPersonales.dart';
+import 'package:app_medica/vistas/tipoDeCirugia.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -125,31 +127,23 @@ class datosPersonales extends StatelessWidget {
                         Provider.of<datosFormulario>(context, listen: false)
                             .updateVolemia(peso);
                         Provider.of<datosFormulario>(context, listen: false)
-                            .updateEdad(edad);
-                            
-                        Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => const antecedentesPersonales())
-                        );
+                              .updateEdad(edad);
+                            Provider.of<datosFormulario>(context, listen: false)
+                              .updateIMC(peso, talla);
+
+                            int edadP = Provider.of<datosFormulario>(context, listen: false).edad;
+                            double imc = Provider.of<datosFormulario>(context, listen: false).imc;
+
+                            Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => SurgeryRiskCalculator(patientAge: edadP, patientIMC: imc))
+                            );
+                    
                       }
                     },
                     child: const Text('Calcular'),
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                Consumer<datosFormulario>(
-                  builder: (context, calculos, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('IMC: ${calculos.imc}'),
-                        Text('Peso Ideal: ${calculos.pesoIdeal}'),
-                        Text('Peso Predicho: ${calculos.pesoPredicho}'),
-                        Text('Volemia: ${calculos.volemia} ml'),
-                        Text('Edad: ${calculos.edad} años')
-                      ],
-                    );
-                  },
-                ),
+           
               ],
             ),
           ),
