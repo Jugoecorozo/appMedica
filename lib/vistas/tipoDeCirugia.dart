@@ -1,7 +1,6 @@
 import 'package:app_medica/vistas/antecedentesPersonales.dart';
 import 'package:flutter/material.dart';
 
-
 class SurgeryRiskCalculator extends StatefulWidget {
   final int patientAge;
   final double patientIMC;
@@ -191,15 +190,20 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
                   // Widget para la escala actual
                   Widget scaleWidget;
                   if (scale == 'Escala De Glance') {
-                    scaleWidget = GlanceScaleWidget(onValueUpdated: updateScaleValue);
-                  } else if (scale == 'Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)') {
-                    scaleWidget = LeeScaleWidget(onValueUpdated: updateScaleValue);
+                    scaleWidget =
+                        GlanceScaleWidget(onValueUpdated: updateScaleValue);
+                  } else if (scale ==
+                      'Escala De Índice Revisado De Riesgo Cardíaco Modificado (LEE)') {
+                    scaleWidget =
+                        LeeScaleWidget(onValueUpdated: updateScaleValue);
                   } else if (scale == 'Escala De Capacidad Funcional') {
-                    scaleWidget = CapacidadFuncional(onValueUpdated: updateScaleValue);
-                  } else if (scale == 'Escala Caprini Para Riesgo De Trombosis Venosa') {
+                    scaleWidget =
+                        CapacidadFuncional(onValueUpdated: updateScaleValue);
+                  } else if (scale ==
+                      'Escala Caprini Para Riesgo De Trombosis Venosa') {
                     scaleWidget = Caprini(onValueUpdated: updateScaleValue);
                   } else if (scale == 'Escala De APFEL') {
-                    scaleWidget = Appel(onValueUpdated: updateScaleValue);
+                    scaleWidget = Apfel(onValueUpdated: updateScaleValue);
                   } else if (scale == 'Escala ARISCAT') {
                     scaleWidget = Ariscat(onValueUpdated: updateScaleValue);
                   } else if (scale == 'EUROSCORE II') {
@@ -209,16 +213,17 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
                   } else {
                     scaleWidget = const SizedBox();
                   }
-                  
+
                   // Agregar STOP BANG si el IMC es mayor o igual a 30
                   if (scale == 'Escala De Barthel' && widget.patientAge > 65) {
                     scaleWidget = Column(
                       children: [
                         scaleWidget,
-                        Barthel(onValueUpdated: updateScaleValue),
+                        BarthelForm(onValueUpdated: updateScaleValue),
                       ],
                     );
-                  } else if (scale == 'Escala De STOP-BANG' && widget.patientIMC >= 30) {
+                  } else if (scale == 'Escala De STOP-BANG' &&
+                      widget.patientIMC >= 30) {
                     scaleWidget = Column(
                       children: [
                         scaleWidget,
@@ -226,10 +231,11 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
                       ],
                     );
                   }
-                  
+
                   // Retornar el widget de la escala actual
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     child: scaleWidget,
                   );
                 }),
@@ -241,9 +247,11 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
                   scaleValues.forEach((scale, value) {
                     print('$scale: $value');
                   });
-                  Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) => const antecedentesPersonales())
-);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const antecedentesPersonales()));
                 },
                 child: const Text('Calcular Riesgo'),
               ),
@@ -254,7 +262,6 @@ class _SurgeryRiskCalculatorState extends State<SurgeryRiskCalculator> {
     );
   }
 }
-
 
 class GlanceScaleWidget extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
@@ -656,8 +663,6 @@ class _CapriniState extends State<Caprini> {
   String? selectedAge;
   String? selectedSurgeryType;
   int puntosTotales = 0;
-  int nuevosPuntos = 0;
-  
 
   bool cirugiaMayor = false;
   bool insuficienciaCardiaca = false;
@@ -691,7 +696,7 @@ class _CapriniState extends State<Caprini> {
   bool enfermedadPulmonarObstructiva = false;
   bool otrosFactoresRiesgo = false;
 
-String calcularCategoria(int puntos) {
+  String calcularCategoria(int puntos) {
     if (puntos == 0) {
       return 'Muy bajo';
     } else if (puntos <= 2) {
@@ -739,83 +744,81 @@ String calcularCategoria(int puntos) {
     }
   }
 
-
   void _actualizarPuntos() {
-    puntosTotales = 0;
-    nuevosPuntos = 0;
-
+    int nuevosPuntos = 0;
 
     // Calcular puntos para la edad
     switch (selectedAge) {
       case '<40':
-        puntosTotales += 0;
+        nuevosPuntos += 0;
         break;
       case '41-60':
-        puntosTotales += 1;
+        nuevosPuntos += 1;
         break;
       case '61-74':
-        puntosTotales += 2;
+        nuevosPuntos += 2;
         break;
       case '>75':
-        puntosTotales += 3;
+        nuevosPuntos += 3;
         break;
     }
 
     // Calcular puntos para el tipo de cirugía
     switch (selectedSurgeryType) {
       case 'Menor':
-        puntosTotales += 1;
+        nuevosPuntos += 1;
         break;
       case '>45 min':
-        puntosTotales += 2;
+        nuevosPuntos += 2;
         break;
       case 'Laparoscópica':
-        puntosTotales += 2;
+        nuevosPuntos += 2;
         break;
       case 'Artroplastia':
-        puntosTotales += 5;
+        nuevosPuntos += 5;
         break;
     }
 
-        puntosTotales = nuevosPuntos;
+// preguntas de si o no
+
+    nuevosPuntos += (cirugiaMayor ? 1 : 0);
+    nuevosPuntos += (insuficienciaCardiaca ? 1 : 0);
+    nuevosPuntos += (sepsis ? 1 : 0);
+    nuevosPuntos += (neumonia ? 1 : 0);
+    nuevosPuntos += (embarazoPostparto ? 1 : 0);
+    nuevosPuntos += (yesoInmovilizador ? 2 : 0);
+    nuevosPuntos += (fracturaCadera ? 5 : 0);
+    nuevosPuntos += (infarto ? 5 : 0);
+    nuevosPuntos += (politraumatismo ? 5 : 0);
+    nuevosPuntos += (lesionMedulaEspinal ? 5 : 0);
+    nuevosPuntos += (venasVaricosas ? 1 : 0);
+    nuevosPuntos += (edemaPelvico ? 1 : 0);
+    nuevosPuntos += (accesoVenosoCentral ? 2 : 0);
+    nuevosPuntos += (antecedentesTVP_EP ? 3 : 0);
+    nuevosPuntos += (antecedentesFamiliaresTrombosis ? 3 : 0);
+    nuevosPuntos += (factorVLeiden ? 3 : 0);
+    nuevosPuntos += (homocisteinaElevada ? 3 : 0);
+    nuevosPuntos += (anticoagulanteLupico ? 3 : 0);
+    nuevosPuntos += (anticuerposAnticardiolipina ? 3 : 0);
+    nuevosPuntos += (trombocitopeniaInducidaHeparina ? 3 : 0);
+    nuevosPuntos += (otraTrombofilia ? 3 : 0);
+    nuevosPuntos += (padecimientoMedico ? 1 : 0);
+    nuevosPuntos += (pacienteConfinadoCama ? 2 : 0);
+    nuevosPuntos += (antecedentesEnfermedadInflamatoria ? 1 : 0);
+    nuevosPuntos += (indiceMasaCorporal ? 1 : 0);
+    nuevosPuntos += (infartoMiocardio ? 1 : 0);
+    nuevosPuntos += (enfermedadPulmonarObstructiva ? 1 : 0);
+    nuevosPuntos += (otrosFactoresRiesgo ? 1 : 0);
+
+    setState(() {
+      puntosTotales = nuevosPuntos;
+    });
 
     String categoria = calcularCategoria(puntosTotales);
     String riesgo = calcularRiesgo(puntosTotales);
     String recomendaciones = calcularRecomendaciones(puntosTotales);
 
-
-
-    // Calcular puntos para las preguntas
-    puntosTotales += (cirugiaMayor ? 1 : 0) +
-        (insuficienciaCardiaca ? 1 : 0) +
-        (sepsis ? 1 : 0) +
-        (neumonia ? 1 : 0) +
-        (embarazoPostparto ? 1 : 0) +
-        (yesoInmovilizador ? 2 : 0) +
-        (fracturaCadera ? 5 : 0) +
-        (infarto ? 5 : 0) +
-        (politraumatismo ? 5 : 0) +
-        (lesionMedulaEspinal ? 5 : 0) +
-        (venasVaricosas ? 1 : 0) +
-        (edemaPelvico ? 1 : 0) +
-        (accesoVenosoCentral ? 2 : 0) +
-        (antecedentesTVP_EP ? 3 : 0) +
-        (antecedentesFamiliaresTrombosis ? 3 : 0) +
-        (factorVLeiden ? 3 : 0) +
-        (homocisteinaElevada ? 3 : 0) +
-        (anticoagulanteLupico ? 3 : 0) +
-        (anticuerposAnticardiolipina ? 3 : 0) +
-        (trombocitopeniaInducidaHeparina ? 3 : 0) +
-        (otraTrombofilia ? 3 : 0) +
-        (padecimientoMedico ? 1 : 0) +
-        (pacienteConfinadoCama ? 2 : 0) +
-        (antecedentesEnfermedadInflamatoria ? 5 : 0) +
-        (indiceMasaCorporal ? 5 : 0) +
-        (infartoMiocardio ? 5 : 0) +
-        (enfermedadPulmonarObstructiva ? 5 : 0) +
-        (otrosFactoresRiesgo ? 5 : 0);
-
-        String resultados =
+    String resultados =
         'Escala de Caprini: $puntosTotales puntos, riesgo $categoria ($riesgo) para presentar trombosis venosa, se recomienda $recomendaciones.';
     widget.onValueUpdated('Escala de Caprini', resultados);
   }
@@ -1102,7 +1105,8 @@ String calcularCategoria(int puntos) {
           },
         ),
         CheckboxListTile(
-          title: Text('¿Otros factores de riesgo? (anticonceptivos orales o reemplazo hormonal, ≥3 abortos espontáneos o nacimiento prematuro con toxemia o lactante con retraso del crecimiento)'),
+          title: Text(
+              '¿Otros factores de riesgo? (anticonceptivos orales o reemplazo hormonal, ≥3 abortos espontáneos o nacimiento prematuro con toxemia o lactante con retraso del crecimiento)'),
           value: otrosFactoresRiesgo,
           onChanged: (bool? value) {
             setState(() {
@@ -1118,145 +1122,233 @@ String calcularCategoria(int puntos) {
   }
 }
 
-class Appel extends StatefulWidget {
+
+class Apfel extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const Appel({super.key, required this.onValueUpdated});
+  const Apfel({Key? key, required this.onValueUpdated}) : super(key: key);
 
   @override
-  State<Appel> createState() => _AppelState();
+  State<Apfel> createState() => _ApfelState();
 }
 
-class _AppelState extends State<Appel> {
-  String? selectedRiskFactor;
+class _ApfelState extends State<Apfel> {
+  bool isFemale = false;
+  bool isSmoker = false;
+  bool hasNauseaAndVomiting = false;
+  bool hasPostoperativeOpioids = false;
+
+  
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Escala De APFEL',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
-          DataTable(
-            columns: const [
-              DataColumn(label: Text('Factor de riesgo')),
-              DataColumn(label: Text('Puntos')),
-              DataColumn(label: Text('%')),
-              DataColumn(label: Text('Riesgo')),
-            ],
-            rows: [
-              _buildRow('Ninguno', '0', '10', 'Muy bajo'),
-              _buildRow('Sexo femenino', '1', '20', 'Bajo'),
-              _buildRow('No fumador', '2', '40', 'Moderado'),
-              _buildRow(
-                  'Historia de náuseas y vómito postoperatorio o cinetosis',
-                  '3',
-                  '60',
-                  'Alto'),
-            ],
+          SizedBox(height: 10),
+          CheckboxListTile(
+            title: Text('¿Es usted de sexo femenino?'),
+            value: isFemale,
+            onChanged: (newValue) {
+              setState(() {
+                isFemale = newValue ?? false;
+                _calculateResult
+                ();
+              });
+            },
           ),
+          CheckboxListTile(
+            title: Text('¿Es usted fumador?'),
+            value: isSmoker,
+            onChanged: (newValue) {
+              setState(() {
+                isSmoker = newValue ?? false;
+                _calculateResult();
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: Text('¿Tiene historia de náuseas y vómito postoperatorio o cinetosis?'),
+            value: hasNauseaAndVomiting,
+            onChanged: (newValue) {
+              setState(() {
+                hasNauseaAndVomiting = newValue ?? false;
+                _calculateResult();
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: Text('¿Ha usado opioides en el postoperatorio?'),
+            value: hasPostoperativeOpioids,
+            onChanged: (newValue) {
+              setState(() {
+                hasPostoperativeOpioids = newValue ?? false;
+                _calculateResult();
+              });
+            },
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  DataRow _buildRow(
-      String riskFactor, String points, String percentage, String risk) {
-    return DataRow(
-      selected: selectedRiskFactor == riskFactor,
-      onSelectChanged: (selected) {
-        if (selected != null && selected) {
-          setState(() {
-            selectedRiskFactor = riskFactor;
-          });
-          widget.onValueUpdated('Escala de Appel ',
-              '$points puntos, riesgo: $risk ($percentage%) para presentar NVPO. ');
-        }
-      },
-      cells: [
-        DataCell(Text(riskFactor)),
-        DataCell(Text(points)),
-        DataCell(Text(percentage)),
-        DataCell(Text(risk)),
-      ],
-    );
+  void _calculateResult() {
+    int points = 0;
+    String risk = '';
+
+    if (isFemale) points ++;
+    if (isSmoker) points ++;
+    if (hasNauseaAndVomiting) points ++;
+    if (hasPostoperativeOpioids) points ++;
+
+    if (points == 0) {
+      risk = 'Muy bajo (10%)';
+    } else if (points == 1) {
+      risk = 'Bajo (20%)';
+    } else if (points == 2) {
+      risk = 'Moderado (40%)';
+    } else if (points == 3) {
+      risk = 'Alto (60%)';
+    } else {
+      risk = 'Muy Alto (80%)';
+    }
+
+    widget.onValueUpdated('Escala de Appel',' $points puntos, riesgo: $risk para presentar NVPO.');
   }
 }
 
-class Barthel extends StatefulWidget {
+class BarthelForm extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
-  const Barthel({super.key, required this.onValueUpdated});
+  BarthelForm({required this.onValueUpdated});
 
   @override
-  State<Barthel> createState() => _BarthelState();
+  _BarthelFormState createState() => _BarthelFormState();
 }
 
-class _BarthelState extends State<Barthel> {
-  String? selectedClassification;
+class _BarthelFormState extends State<BarthelForm> {
+  Map<String, int?> activityPoints = {};
+
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          const Text(
-            'Escala De Barthel',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+          _buildActivityRow(
+              "Comer", ["Independiente", "Necesita ayuda", "Dependiente"], [10, 5, 0]),
+          _buildActivityRow(
+              "Lavarse", ["Independiente", "Dependiente"], [5, 0]),
+          _buildActivityRow(
+              "Vestirse", ["Independiente", "Necesita ayuda", "Dependiente"], [10, 5, 0]),
+          _buildActivityRow(
+              "Arreglarse", ["Independiente", "Dependiente"], [5, 0]),
+          _buildActivityRow("Deposición", ["Continente", "Ocasional", "Incontinente"], [10, 5, 0]),
+          _buildActivityRow("Micción", ["Continente", "Ocasional", "Incontinente"], [10, 5, 0]),
+          _buildActivityRow(
+              "Uso retrete", ["Independiente", "Necesita ayuda", "Dependiente"], [10, 5, 0]),
+          _buildActivityRow(
+              "Trasladarse (sillón/cama)",
+              ["Independiente", "Mínima ayuda", "Necesita gran ayuda", "Dependiente"],
+              [15, 10, 5, 0]),
+          _buildActivityRow(
+              "Deambular",
+              ["Independiente", "Necesita ayuda", "Independiente en silla", "Dependiente"],
+              [15, 10, 5, 0]),
+          _buildActivityRow(
+              "Subir escalera", ["Independiente", "Necesita ayuda", "Dependiente"], [10, 5, 0]),
+          SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                int totalPoints = 0;
+                activityPoints.forEach((activity, points) {
+                  if (points != null) {
+                    totalPoints += points;
+                  }
+                });
+                String classification = _getClassification(totalPoints);
+                widget.onValueUpdated("Escala de Barthel", "$totalPoints $classification");
+              },
+              child: Text("Calcular"),
             ),
           ),
-          _buildDataTable(),
         ],
       ),
     );
   }
 
-  Widget _buildDataTable() {
-    return DataTable(
-      dataRowMaxHeight: double.infinity,
-      columns: const [
-        DataColumn(label: Text('Puntos')),
-        DataColumn(label: Text('Clasificación')),
-      ],
-      rows: [
-        _buildRow('0-20', 'Dependencia total'),
-        _buildRow('21-60', 'Dependencia severa'),
-        _buildRow('61-90', 'Dependencia moderada'),
-        _buildRow('91-99', 'Dependencia leve'),
-        _buildRow('100', 'Independiente'),
-      ],
-    );
-  }
+ Widget _buildActivityRow(String activity, List<String> options, List<int> points) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(activity, style: TextStyle(fontWeight: FontWeight.bold)),
+      SizedBox(height: 10),
+      ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          return CheckboxListTile(
+            title: Text(options[index]),
+            value: activityPoints[activity] == points[index],
+            onChanged: (value) {
+              setState(() {
+                if (value!) {
+                  activityPoints[activity] = points[index];
+                } else {
+                  activityPoints[activity] = null;
+                }
+              });
 
-  DataRow _buildRow(String pointsRange, String classification) {
-    return DataRow(
-      selected: selectedClassification == classification,
-      onSelectChanged: (selected) {
-        if (selected != null && selected) {
-          setState(() {
-            selectedClassification = classification;
-          });
-          widget.onValueUpdated(
-              'Escala De Barthel', '$pointsRange, $classification');
-        }
-      },
-      cells: [
-        DataCell(Text(pointsRange)),
-        DataCell(Text(classification)),
-      ],
-    );
-  }
+              // Calcular el puntaje total
+              int totalPoints = 0;
+              activityPoints.forEach((activity, points) {
+                if (points != null) {
+                  totalPoints += points;
+                }
+              });
+
+              // Obtener la clasificación
+              String classification = _getClassification(totalPoints);
+
+              // Llamar a onValueUpdated con el puntaje total y la clasificación
+              widget.onValueUpdated("Escala de Barthel", "$totalPoints $classification");
+            },
+          );
+        },
+      ),
+      Divider(),
+    ],
+  );
 }
 
+
+  String _getClassification(int points) {
+    if (points >= 0 && points <= 20) {
+      return "Dependencia total";
+    } else if (points >= 21 && points <= 60) {
+      return "Dependencia severa";
+    } else if (points >= 61 && points <= 90) {
+      return "Dependencia moderada";
+    } else if (points >= 91 && points <= 99) {
+      return "Dependencia leve";
+    } else {
+      return "Independiente";
+    }
+  }
+}
 class Ariscat extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
 
@@ -1265,71 +1357,72 @@ class Ariscat extends StatefulWidget {
   @override
   State<Ariscat> createState() => _AriscatState();
 }
+
 class _AriscatState extends State<Ariscat> {
   @override
   Widget build(BuildContext context) {
     return Column(
-          children: [
-            const Text(
-              'Escala De ARISCAT',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            DataTable(
-              dataRowMaxHeight: double.infinity,
-              columnSpacing: 8,
-              columns: const [
-                DataColumn(label: Text('Factor de riesgo')),
-                DataColumn(label: Text('')),
-                DataColumn(label: Text('Puntos')),
-              ],
-              rows: const [
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Edad, años'))),
-                  DataCell(Center(child: Text('<50\n51-80\n>80'))),
-                  DataCell(Center(child: Text('0\n3\n16'))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Saturación parcial de oxígeno preoperatorio'))),
-                  DataCell(Center(child: Text('>96%\n91-95%\n<90%'))),
-                  DataCell(Center(child: Text('0\n8\n24'))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Infección respiratoria en el último mes'))),
-                  DataCell(Center(child: Text('No\nSi'))),
-                  DataCell(Center(child: Text('0\n17'))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Anemia preoperatoria (< 10g/dL)'))),
-                  DataCell(Center(child: Text('No\nSi'))),
-                  DataCell(Center(child: Text('0\n11'))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Incisión quirúrgica'))),
-                  DataCell(Center(child: Text('Periférica\nAbdomen superior\nTorácica'))),
-                  DataCell(Center(child: Text('0\n15\n24'))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Duración de la cirugía'))),
-                  DataCell(Center(child: Text('< 2horas\n2 a 3 horas\n>3 horas'))),
-                  DataCell(Center(child: Text('0\n16\n23'))),
-                ]),
-                DataRow(cells: [
-                  DataCell(Center(child: Text('Procedimiento de emergencia'))),
-                  DataCell(Center(child: Text('No\nSi'))),
-                  DataCell(Center(child: Text('0\n8'))),
-                ]),
-              ],
-            ),
+      children: [
+        const Text(
+          'Escala De ARISCAT',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        DataTable(
+          dataRowMaxHeight: double.infinity,
+          columnSpacing: 8,
+          columns: const [
+            DataColumn(label: Text('Factor de riesgo')),
+            DataColumn(label: Text('')),
+            DataColumn(label: Text('Puntos')),
           ],
-        );
-      
+          rows: const [
+            DataRow(cells: [
+              DataCell(Center(child: Text('Edad, años'))),
+              DataCell(Center(child: Text('<50\n51-80\n>80'))),
+              DataCell(Center(child: Text('0\n3\n16'))),
+            ]),
+            DataRow(cells: [
+              DataCell(Center(
+                  child: Text('Saturación parcial de oxígeno preoperatorio'))),
+              DataCell(Center(child: Text('>96%\n91-95%\n<90%'))),
+              DataCell(Center(child: Text('0\n8\n24'))),
+            ]),
+            DataRow(cells: [
+              DataCell(Center(
+                  child: Text('Infección respiratoria en el último mes'))),
+              DataCell(Center(child: Text('No\nSi'))),
+              DataCell(Center(child: Text('0\n17'))),
+            ]),
+            DataRow(cells: [
+              DataCell(Center(child: Text('Anemia preoperatoria (< 10g/dL)'))),
+              DataCell(Center(child: Text('No\nSi'))),
+              DataCell(Center(child: Text('0\n11'))),
+            ]),
+            DataRow(cells: [
+              DataCell(Center(child: Text('Incisión quirúrgica'))),
+              DataCell(Center(
+                  child: Text('Periférica\nAbdomen superior\nTorácica'))),
+              DataCell(Center(child: Text('0\n15\n24'))),
+            ]),
+            DataRow(cells: [
+              DataCell(Center(child: Text('Duración de la cirugía'))),
+              DataCell(Center(child: Text('< 2horas\n2 a 3 horas\n>3 horas'))),
+              DataCell(Center(child: Text('0\n16\n23'))),
+            ]),
+            DataRow(cells: [
+              DataCell(Center(child: Text('Procedimiento de emergencia'))),
+              DataCell(Center(child: Text('No\nSi'))),
+              DataCell(Center(child: Text('0\n8'))),
+            ]),
+          ],
+        ),
+      ],
+    );
   }
 }
-
-
 
 class StopBang extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
@@ -1453,15 +1546,12 @@ class _StopBangState extends State<StopBang> {
   void _updateRisk() {
     int positiveAnswers = answers.values.where((element) => element).length;
     if (positiveAnswers > 3) {
-      widget.onValueUpdated('Escala De STOP-BANG: ','Alto Riesgo');
+      widget.onValueUpdated('Escala De STOP-BANG: ', 'Alto Riesgo');
     } else {
-      widget.onValueUpdated('Escala De STOP-BANG: ','Bajo Riesgo');
+      widget.onValueUpdated('Escala De STOP-BANG: ', 'Bajo Riesgo');
     }
   }
 }
-
-
-
 
 class ToracoScore extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
@@ -1499,31 +1589,46 @@ class _ToracoScoreState extends State<ToracoScore> {
               _buildDataRow('Grupo de edad', '> 65 años', '2'),
               _buildDataRow('Sexo', 'Femenino', '0'),
               _buildDataRow('Sexo', 'Masculino', '1'),
-              _buildDataRow('Estado Físico', 'Estado funcional menor o igual a 2', '0'),
+              _buildDataRow(
+                  'Estado Físico', 'Estado funcional menor o igual a 2', '0'),
               _buildDataRow('Estado Físico', 'Actividad normal', '0'),
-              _buildDataRow('Estado Físico', 'Síntomas, pero casi completamente ambulatorio', '0'),
-              _buildDataRow('Estado Físico', 'Algún tiempo en la cama, pero menos de la mitad del día', '0'),
-              _buildDataRow('Estado Físico', 'Estado funcional mayor o igual a 3', '1'),
-              _buildDataRow('Estado Físico', 'Necesita encamamiento mayor del 50% del tiempo diario', '1'),
-              _buildDataRow('Estado Físico', 'Imposible que pueda levantarse de la cama', '1'),
+              _buildDataRow('Estado Físico',
+                  'Síntomas, pero casi completamente ambulatorio', '0'),
+              _buildDataRow(
+                  'Estado Físico',
+                  'Algún tiempo en la cama, pero menos de la mitad del día',
+                  '0'),
+              _buildDataRow(
+                  'Estado Físico', 'Estado funcional mayor o igual a 3', '1'),
+              _buildDataRow('Estado Físico',
+                  'Necesita encamamiento mayor del 50% del tiempo diario', '1'),
+              _buildDataRow('Estado Físico',
+                  'Imposible que pueda levantarse de la cama', '1'),
               _buildDataRow('Riesgo ASA', 'Menor o igual a 2', '0'),
               _buildDataRow('Riesgo ASA', 'Mayor o igual a 3', '1'),
               _buildDataRow('Puntuación disnea', 'Menor o igual a 2', '0'),
               _buildDataRow('Puntuación disnea', 'No disnea', '0'),
               _buildDataRow('Puntuación disnea', 'Disnea leve', '0'),
               _buildDataRow('Puntuación disnea', 'Disnea Moderada', '0'),
-              _buildDataRow('Puntuación disnea', 'Disnea moderada a severa', '1'),
+              _buildDataRow(
+                  'Puntuación disnea', 'Disnea moderada a severa', '1'),
               _buildDataRow('Puntuación disnea', 'Disnea severa', '1'),
               _buildDataRow('Puntuación disnea', 'Disnea muy severa', '1'),
               _buildDataRow('Tipo de cirugía', 'Cirugía Electiva', '0'),
-              _buildDataRow('Tipo de cirugía', 'Cirugía urgente o emergente', '1'),
-              _buildDataRow('Tipo de intervención', 'Intervención: Neumectomía', '1'),
-              _buildDataRow('Tipo de intervención', 'Si Intervención: Otras', '0'),
+              _buildDataRow(
+                  'Tipo de cirugía', 'Cirugía urgente o emergente', '1'),
+              _buildDataRow(
+                  'Tipo de intervención', 'Intervención: Neumectomía', '1'),
+              _buildDataRow(
+                  'Tipo de intervención', 'Si Intervención: Otras', '0'),
               _buildDataRow('Grupo de diagnóstico', 'Benigno', '0'),
               _buildDataRow('Grupo de diagnóstico', 'Maligno', '1'),
-              _buildDataRow('Número de comorbilidades', 'Ninguna comorbilidad', '0'),
-              _buildDataRow('Número de comorbilidades', 'Hasta 2 comorbilidades', '1'),
-              _buildDataRow('Número de comorbilidades', '3 o más comorbilidades', '2'),
+              _buildDataRow(
+                  'Número de comorbilidades', 'Ninguna comorbilidad', '0'),
+              _buildDataRow(
+                  'Número de comorbilidades', 'Hasta 2 comorbilidades', '1'),
+              _buildDataRow(
+                  'Número de comorbilidades', '3 o más comorbilidades', '2'),
             ],
           ),
         ),
@@ -1539,8 +1644,6 @@ class _ToracoScoreState extends State<ToracoScore> {
     ]);
   }
 }
-
-
 
 class EuroScoreII extends StatefulWidget {
   final void Function(String, String) onValueUpdated;
