@@ -1,5 +1,5 @@
 import 'package:app_medica/calculos/datosFormulario.dart';
-import 'package:app_medica/vistas/paraclinicos.dart';
+import 'package:app_medica/vistas/Screens/paraclinicos.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 //ESTA ES LA CUARTA PÁGINA
@@ -556,7 +556,7 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
         Provider.of<datosFormulario>(context, listen: false).updateIPA(cigarrillos, aniosFumando);
 
         Navigator.push(context, 
-                          MaterialPageRoute(builder: (context) =>  const ParaclinicosWidget()));
+                          MaterialPageRoute(builder: (context) =>  const ParaclinicosWidget())); //aqui deberia ir a examen fisico
       },
       child: const Text('Siguiente'),
     );

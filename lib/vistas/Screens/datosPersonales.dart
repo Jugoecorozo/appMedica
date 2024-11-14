@@ -1,7 +1,6 @@
 import 'package:app_medica/calculos/datosFormulario.dart';
-import 'package:app_medica/modelos/modeloDeDatos.dart';
-import 'package:app_medica/vistas/antecedentesPersonales.dart';
-import 'package:app_medica/vistas/tipoDeCirugia.dart';
+import 'package:app_medica/vistas/Screens/antecedentesPersonales.dart';
+import 'package:app_medica/vistas/Screens/tipoDeCirugia.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +13,7 @@ class datosPersonales extends StatelessWidget {
   final TextEditingController _pesoController = TextEditingController();
   final TextEditingController _tallaController = TextEditingController();
 
-  final RegExp _onlyLetters = RegExp(r'^[a-zA-Z ]+$');
+  final RegExp _onlyLetters = RegExp(r'^[a-zA-ZÁÉÍÓÚáéíóúÑñ ]+$');
   final RegExp _onlyNumbers = RegExp(r'^[0-9.]+$');
 
   datosPersonales({super.key});
@@ -113,11 +112,24 @@ class datosPersonales extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        String nombre = _nombreController.text;
                         double peso = double.parse(_pesoController.text);
                         double talla = double.parse(_tallaController.text);
                         DateTime fechaNacimiento = DateFormat('dd-MMM-yyyy').parse(_fechaNacimientoController.text);
                         int edad = DateTime.now().year - fechaNacimiento.year;
+                        if (DateTime.now().month < fechaNacimiento.month || 
+                          (DateTime.now().month == fechaNacimiento.month && DateTime.now().day < fechaNacimiento.day)) {
+                          edad--;
+                        }
 
+                        Provider.of<datosFormulario>(context,listen: false)
+                            .updateNombre(nombre);
+                        Provider.of<datosFormulario>(context,listen: false)
+                            .updatePeso(peso);
+                        Provider.of<datosFormulario>(context,listen: false)
+                            .updateSexo(_sexo);
+                        Provider.of<datosFormulario>(context,listen: false)
+                            .updateAltura(talla);
                         Provider.of<datosFormulario>(context, listen: false)
                             .updateIMC(peso, talla);
                         Provider.of<datosFormulario>(context, listen: false)
@@ -127,15 +139,14 @@ class datosPersonales extends StatelessWidget {
                         Provider.of<datosFormulario>(context, listen: false)
                             .updateVolemia(peso);
                         Provider.of<datosFormulario>(context, listen: false)
-                              .updateEdad(edad);
-                            Provider.of<datosFormulario>(context, listen: false)
-                              .updateIMC(peso, talla);
+                            .updateEdad(edad);
+                        Provider.of<datosFormulario>(context, listen: false)
+                            .updatefechaNacimiento(fechaNacimiento);
 
-                            int edadP = Provider.of<datosFormulario>(context, listen: false).edad;
-                            double imc = Provider.of<datosFormulario>(context, listen: false).imc;
+                            
 
                             Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => SurgeryRiskCalculator(patientAge: edadP, patientIMC: imc))
+                              MaterialPageRoute(builder: (context) => antecedentesPersonales())
                             );
                     
                       }

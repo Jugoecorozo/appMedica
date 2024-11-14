@@ -1,5 +1,8 @@
+import 'package:app_medica/calculos/datosFormulario.dart';
+import 'package:app_medica/vistas/Screens/resultados.dart';
 import 'package:flutter/material.dart';
-
+import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 
 class planAnestesico extends StatefulWidget {
   const planAnestesico({super.key});
@@ -23,6 +26,7 @@ class _planAnestesicoState extends State<planAnestesico> {
     'Firmar consentimiento informado.',
     'Se explica técnica anestésica y sus posibles complicaciones, quien refiere entender y aceptar.',
   ];
+  final TextEditingController _freeTextController = TextEditingController();
 
   void _onOptionSelected(String option, bool? value) {
     setState(() {
@@ -34,8 +38,14 @@ class _planAnestesicoState extends State<planAnestesico> {
     });
   }
 
-  void _onSaveButtonPressed() {
-    print(selectedOptions);
+  Future<void> _onSaveButtonPressed() async {
+    Provider.of<datosFormulario>(context, listen: false)
+        .setSelectedOptions(selectedOptions);
+    Provider.of<datosFormulario>(context, listen: false).setFreeText(_freeTextController.text);
+
+    final data = Provider.of<datosFormulario>(context, listen: false);
+    final pdfFile = await resultados.generarDocumento(data);
+    OpenFile.open(pdfFile.path);
     // Aquí puedes realizar cualquier acción que desees con la lista de opciones seleccionadas
   }
 
@@ -46,16 +56,30 @@ class _planAnestesicoState extends State<planAnestesico> {
         title: const Text('Plan Anestésico'),
       ),
       body: ListView.builder(
-        itemCount: options.length,
+        itemCount: options.length + 1, // +1 para el TextField adicional
         itemBuilder: (context, index) {
-          final option = options[index];
-          return CheckboxListTile(
-            title: Text(option),
-            value: selectedOptions.contains(option),
-            onChanged: (bool? value) {
-              _onOptionSelected(option, value);
-            },
-          );
+          if (index < options.length) {
+            final option = options[index];
+            return CheckboxListTile(
+              title: Text(option),
+              value: selectedOptions.contains(option),
+              onChanged: (bool? value) {
+                _onOptionSelected(option, value);
+              },
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _freeTextController,
+                decoration: const InputDecoration(
+                  labelText: 'Escribe aquí cualquier otra información',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: null,
+              ),
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(

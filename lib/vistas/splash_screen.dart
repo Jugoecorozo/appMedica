@@ -1,4 +1,4 @@
-import 'package:app_medica/vistas/datosPersonales.dart';
+import 'package:app_medica/vistas/Screens/datosPersonales.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
