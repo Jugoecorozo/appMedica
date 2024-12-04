@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app_medica/calculos/datosFormulario.dart';
 import 'package:app_medica/vistas/Screens/paraclinicos.dart';
 import 'package:flutter/material.dart';
@@ -191,6 +193,120 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
     }).toList();
   }
 
+  void calcularASA() {
+  final asaII = [
+    'Fumador.',
+    'Bebedor social.',
+    'Embarazo.',
+    'Hipertensión gestacional controlada.',
+    'Diabetes gestacional controlada.',
+    'Obesidad grado I.',
+    'Asma.',
+    'Infección respiratoria aguda.',
+    'Rinitis alérgica.',
+    'Enfermedad cardiaca congénita asintomática.',
+    'Epilepsia bien controlada.',
+    'Síndrome de apnea del sueño leve o moderado.',
+    'Cáncer en remisión.',
+    'Autismo con limitaciones leves.',
+    'Diabetes mellitus no insulinorequiriente.',
+    'Hipertensión arterial controlada.',
+    'Enfermedad renal crónica hasta etapa 4.',
+    'Hipotiroidismo controlado.',
+    'Paciente con COVID 19 asintomático.',
+  ];
+
+  final asaIII = [
+    'Preeclampsia moderada.',
+    'Dependencia o abuso de alcohol.',
+    'Diabetes gestacional con complicaciones o requerimiento de insulina.',
+    'Eclampsia.',
+    'Obesidad mórbida.',
+    'Epilepsia no controlada.',
+    'Síndrome de apnea del sueño severo.',
+    'Cáncer activo o en tratamiento.',
+    'Autismo con limitaciones severas.',
+    'Enfermedad de Alzheimer.',
+    'Enfermedad de Parkinson.',
+    'Diabetes mellitus insulinorequiriente.',
+    'Diabetes mellitus con afectación sistémica.',
+    'Hipertensión arterial con afectación de órgano blanco.',
+    'Enfermedad renal crónica etapa 5 en diálisis regular.',
+    'Insuficiencia renal aguda.',
+    'Daño hepático crónico hasta Child-Pugh B.',
+    'Hepatitis aguda.',
+    'Uso de marcapasos',
+    'Disminución moderada de fracción de eyección cardiaca (40 a 50%).',
+    'Distrofia muscular.',
+    'Historia de trasplante de órgano.',
+    'Malformación cerebral o espinal.',
+    'Hidrocefalia.',
+    'Malnutrición.',
+    'Vía aérea difícil.',
+    'Nutrición parenteral prolongada (se mantiene por más de 7 días).',
+    'Enfermedad trombofílica.',
+    'Hipotiroidismo no controlado.',
+    'Accidente Isquémico Transitorio (De más de 3 meses del episodio).',
+    'Infarto agudo de miocardio (De más de 3 meses del episodio).',
+    'Endoprótesis vascular (STENT) De más de 3 meses del episodio.',
+    'Paciente con COVID 19 sintomático.',
+  ];
+
+  final asaIV = [
+    'Síndrome de HELLP.',
+    'Cardiomiopatía periparto con FEVI <40%.',
+    'Embarazo asociado a enfermedad cardiaca no corregida.',
+    'Cáncer avanzado, con metástasis.',
+    'Enfermedad renal crónica etapa 5 din diálisis regular.',
+    'Daño hepático crónico hasta Child-Pugh C.',
+    'Disminución severa de fracción de eyección cardiaca (menor 40%).',
+    'Accidente Isquémico Transitorio (De menos de 3 meses del episodio).',
+    'Infarto Agudo al miocardio (De menos de 3 meses del episodio).',
+    'Endoprótesis vascular (STENT) De menos de 3 meses del episodio.',
+    'Shock.',
+    'Sepsis.',
+    'Coagulación intravascular diseminada.',
+    'Síndrome de distrés respiratorio agudo.',
+    'Insuficiencia cardiaca congestiva exacerbado.',
+    'Desfibrilador cardioversor implantable (usuario).',
+    'Dependencia de ventilación mecánica.',
+  ];
+
+  final asaV = [
+    'Politraumatizado severo.',
+    'Rotura uterina.',
+    'Desprendimiento de placenta.',
+    'Daño hepático crónico con encefalopatía hepática.',
+    'Requerimiento de ECMO.',
+    'Disfunción orgánica múltiple.',
+    'Isquemia intestinal.',
+    'Insuficiencia cardiaca congestiva descompensada.',
+  ];
+
+  final asaVI = [
+    'Con muerte cerebral: Donante de órganos.',
+  ];
+
+  int asa = 1;
+
+  for (var patologia in _patologicosSeleccionados) {
+    if (asaVI.contains(patologia)) {
+      asa = 6;
+      break;
+    } else if (asaV.contains(patologia)) {
+      asa = max(asa, 5);
+    } else if (asaIV.contains(patologia)) {
+      asa = max(asa, 4);
+    } else if (asaIII.contains(patologia)) {
+      asa = max(asa, 3);
+    } else if (asaII.contains(patologia)) {
+      asa = max(asa, 2);
+    }
+  }
+
+
+  Provider.of<datosFormulario>(context, listen: false).updateASA(asa);
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -554,7 +670,7 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
         Provider.of<datosFormulario>(context, listen: false).updateToxicos(_toxicosSeleccionados);
         Provider.of<datosFormulario>(context, listen: false).updateTransfusion(_transfusionalesSeleccionados);
         Provider.of<datosFormulario>(context, listen: false).updateIPA(cigarrillos, aniosFumando);
-
+        calcularASA();
         Navigator.push(context, 
                           MaterialPageRoute(builder: (context) =>  const ParaclinicosWidget())); //aqui deberia ir a examen fisico
       },

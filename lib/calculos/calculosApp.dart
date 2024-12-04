@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class CalculosApp{
 
 // Funciones para calcular los valores de los indicadores
@@ -39,6 +41,14 @@ class CalculosApp{
 
   static double indiceDePaquetesAnual(int cigarrillos, int anual){
     return cigarrillos * anual / 20;
+  }
+
+  static double calcularToracoscore(double coeficiente){
+    double euler = 2.71828;
+    double constante = 7.3737;
+    double logit = coeficiente - constante;
+
+    return (pow(euler, logit) / (1 + pow(euler, logit))) * 100;
   }
 
 

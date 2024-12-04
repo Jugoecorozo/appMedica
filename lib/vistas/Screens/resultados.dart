@@ -18,6 +18,17 @@ class resultados {
       if (imc < 50) return 'Obesidad tipo 3 o mórbida';
       return 'Obesidad tipo 4 o extrema';
     }
+    
+    String clasificacionASA(int asa) {
+      if (asa == 1) return 'Saludable';
+      if (asa == 2) return 'Enfermedad sistémica leve';
+      if (asa == 3) return 'Enfermedad sistémica grave que limita las actividades';
+      if (asa == 4) return 'Enfermedad sistémica grave que constituye una constante amenaza a la vida';
+      if (asa == 5) return 'Moribundo, no se espera que sobreviva sin una intervención quirúrgica.';
+      if (asa == 6) return 'Con muerte cerebral';
+      return '';
+    }
+
 
     final pdf = pw.Document();
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
@@ -46,14 +57,13 @@ class resultados {
         pw.Text('Antecedentes Personales',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.Divider(thickness: 1.0, color: PdfColors.black),
-        pw.Text('Patológicas: ${datos.patologias.join(', ')}'),
-        pw.Text('Quirúrgicos: ${datos.quirurgicos.join(', ')}'),
-        pw.Text('Anestésicos: ${datos.anestesicos.join(', ')}'),
-        pw.Text('Complicaciones: ${datos.complicaciones.join(', ')}'),
-        pw.Text('Alergias: ${datos.alergicos.join(', ')}',
-            style: pw.TextStyle(color: PdfColors.red)),
-        pw.Text('Tóxicos: ${datos.toxicos.join(', ')}'),
-        pw.Text('Transfusiones: ${datos.transfusion.join(', ')}'),
+        if (datos.patologias.isNotEmpty) pw.Text('Patológicas: ${datos.patologias.join(', ')}'),
+        if (datos.quirurgicos.isNotEmpty) pw.Text('Quirúrgicos: ${datos.quirurgicos.join(', ')}'),
+        if (datos.anestesicos.isNotEmpty) pw.Text('Anestésicos: ${datos.anestesicos.join(', ')}'),
+        if (datos.complicaciones.isNotEmpty) pw.Text('Complicaciones: ${datos.complicaciones.join(', ')}'),
+        if (datos.alergicos.isNotEmpty) pw.Text('Alergias: ${datos.alergicos.join(', ')}', style: pw.TextStyle(color: PdfColors.red)),
+        if (datos.toxicos.isNotEmpty) pw.Text('Tóxicos: ${datos.toxicos.join(', ')}'),
+        if (datos.transfusion.isNotEmpty) pw.Text('Transfusiones: ${datos.transfusion.join(', ')}'),
 
         pw.SizedBox(height: 20),
 
@@ -66,22 +76,22 @@ class resultados {
         pw.Text('Paraclínicos',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.Divider(thickness: 1.0, color: PdfColors.black),
-        pw.Text('Leucocitos: ${datos.leucocitos}'),
-        pw.Text('Neutrófilos: ${datos.neutrofilos}'),
-        pw.Text('Linfocitos: ${datos.linfocitos}'),
-        pw.Text('Hematocrito: ${datos.hematocrito}'),
-        pw.Text('Plaquetas: ${datos.plaquetas}'),
-        pw.Text('BUN: ${datos.bun}'),
-        pw.Text('Creatinina: ${datos.creatinina}'),
-        pw.Text('Glicemia: ${datos.glicemia}'),
-        pw.Text('HbA1C: ${datos.hba1c}'),
-        pw.Text('TP: ${datos.tp}'),
-        pw.Text('TPT: ${datos.tpt}'),
-        pw.Text('Sodio: ${datos.sodio}'),
-        pw.Text('Potasio: ${datos.potasio}'),
-        pw.Text('Cloro: ${datos.cloro}'),
-        pw.Text('Gases Arteriales: ${datos.gasesArteriales}'),
-        pw.Text('Otros: ${datos.otros ?? 'No hay datos'}'),
+        if (datos.leucocitos != null) pw.Text('Leucocitos: ${datos.leucocitos}'),
+        if (datos.neutrofilos != null) pw.Text('Neutrófilos: ${datos.neutrofilos}'),
+        if (datos.linfocitos != null) pw.Text('Linfocitos: ${datos.linfocitos}'),
+        if (datos.hematocrito != null) pw.Text('Hematocrito: ${datos.hematocrito}'),
+        if (datos.plaquetas != null) pw.Text('Plaquetas: ${datos.plaquetas}'),
+        if (datos.bun != null) pw.Text('BUN: ${datos.bun}'),
+        if (datos.creatinina != null) pw.Text('Creatinina: ${datos.creatinina}'),
+        if (datos.glicemia != null) pw.Text('Glicemia: ${datos.glicemia}'),
+        if (datos.hba1c != null) pw.Text('HbA1C: ${datos.hba1c}'),
+        if (datos.tp != null) pw.Text('TP: ${datos.tp}'),
+        if (datos.tpt != null) pw.Text('TPT: ${datos.tpt}'),
+        if (datos.sodio != null) pw.Text('Sodio: ${datos.sodio}'),
+        if (datos.potasio != null) pw.Text('Potasio: ${datos.potasio}'),
+        if (datos.cloro != null) pw.Text('Cloro: ${datos.cloro}'),
+        if (datos.gasesArteriales != null) pw.Text('Gases Arteriales: ${datos.gasesArteriales}'),
+        if (datos.otros != null) pw.Text('Otros: ${datos.otros ?? 'No hay datos'}'),
 
         pw.Text('Pérdidas Permisibles',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
@@ -103,22 +113,29 @@ class resultados {
         pw.Text('Ayudas Diagnósticas',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.Divider(thickness: 1.0, color: PdfColors.black),
-        pw.Bullet(text: datos.ekg ?? 'EKG no disponible'),
-        pw.Bullet(text: datos.ecocardiograma ?? 'Ecocardiograma no disponible'),
-        pw.Bullet(text: datos.rxTorax ?? 'Rx de tórax no disponible'),
-        pw.Bullet(
-            text: datos.otroAyudaDiagnostica ??
-                'Otra ayuda diagnóstica no disponible'),
+        if (datos.ekg != null) pw.Bullet(text: datos.ekg),
+        if (datos.ecocardiograma != null) pw.Bullet(text: datos.ecocardiograma),
+        if (datos.rxTorax != null) pw.Bullet(text: datos.rxTorax),
+        if (datos.otroAyudaDiagnostica != null) pw.Bullet(text: datos.otroAyudaDiagnostica),
+
+        pw.SizedBox(height: 20),
+
+        pw.Text('clasificación ASA',
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        pw.Divider(thickness: 1.0, color: PdfColors.black),
+        pw.Text('ASA: ${datos.asa}'),
+        pw.Text('Clasificación: ${clasificacionASA(datos.asa)}'),
 
         pw.SizedBox(height: 20),
         pw.Text('Tipo de Cirugía: ${datos.selectedSurgery}',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.Divider(thickness: 1.0, color: PdfColors.black),
-        for (var i = 0; i < datos.scaleValues.length; i++)
+         for (var i = 0; i < datos.scaleValues.length; i++)
           pw.Bullet(
-              text:
-                  '${datos.scaleValues.keys.elementAt(i)}: ${datos.scaleValues.values.elementAt(i)}'),
-
+            text: datos.scaleValues.keys.elementAt(i) == 'Escala de ToracoScore'
+                ? '${datos.scaleValues.keys.elementAt(i)}: ${datos.scaleValues.values.elementAt(i)} - Probabilidad de Muerte Hospitalaria: ${datos.probMuerteHospitalaria.toStringAsFixed(1)}%'
+                : '${datos.scaleValues.keys.elementAt(i)}: ${datos.scaleValues.values.elementAt(i)}',
+          ),
         pw.SizedBox(height: 20),
 
         pw.Text('Examen Físico',

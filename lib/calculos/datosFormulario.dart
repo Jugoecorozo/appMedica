@@ -16,6 +16,8 @@ class datosFormulario with ChangeNotifier {
   double tasaFiltracionGlomerular = 0;
   double ipa = 0;
   double hemoglobina = 0;
+  int asa = 1;
+  double probMuerteHospitalaria = 0;
 
   // Propiedades relacionadas con los resultados y cálculos
   List<double> perdidasPermisibles = [];
@@ -184,6 +186,16 @@ class datosFormulario with ChangeNotifier {
   
   void setFreeText(String freeText) {
     this.freeText = freeText;
+    notifyListeners();
+  }
+
+  void updateASA(int asa) {
+    this.asa = asa;
+    notifyListeners();
+  }
+
+  void updateProbMuerteHospitalaria(double coeficiente) {
+    probMuerteHospitalaria = CalculosApp.calcularToracoscore(coeficiente);
     notifyListeners();
   }
 }

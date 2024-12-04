@@ -82,7 +82,8 @@ class ParaclinicosWidget extends StatelessWidget {
         .updatePerdidasPermisibles();
     String sexo = Provider.of<datosFormulario>(context, listen: false).sexo;
     Provider.of<datosFormulario>(context, listen: false)
-                            .updateTasaFiltracionGlomerular(datos.edad, datos.creatinina!, datos.peso, sexo);
+        .updateTasaFiltracionGlomerular(
+            datos.edad, datos.creatinina!, datos.peso, sexo);
     // Mostrar mensaje de confirmación
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -90,7 +91,7 @@ class ParaclinicosWidget extends StatelessWidget {
       ),
     );
 
-    // Navegar a la siguiente 
+    // Navegar a la siguiente
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SurgeryRiskCalculator()),
@@ -103,69 +104,57 @@ class ParaclinicosWidget extends StatelessWidget {
       keyboardType: TextInputType.number,
       onChanged: (value) {
         final double? numericValue = double.tryParse(value);
-        if (numericValue != null) {
-          switch (label) {
-            case 'Leucocitos':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .leucocitos = numericValue;
-              break;
-            case 'Neutrófilos':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .neutrofilos = numericValue;
-              break;
-            case 'Linfocitos':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .linfocitos = numericValue;
-              break;
-            case 'Hemoglobina':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .hemoglobina = numericValue!;
-              break;
-            case 'Hematocrito':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .hematocrito = numericValue;
-              break;
-            case 'Plaquetas':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .plaquetas = numericValue;
-              break;
-            case 'Bun':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .bun = numericValue;
-              break;
-            case 'Creatinina':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .creatinina = numericValue;
-              break;
-            case 'Glicemia':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .glicemia = numericValue;
-              break;
-            case 'HbA1C':
-              Provider.of<datosFormulario>(context, listen: false)
-                  .hba1c = numericValue;
-              break;
-            case 'TP':
-              Provider.of<datosFormulario>(context, listen: false).tp = numericValue;
-              break;
-            case 'TPT':
-              Provider.of<datosFormulario>(context, listen: false).tpt = numericValue;
-              break;
-            case 'Sodio':
-              Provider.of<datosFormulario>(context, listen: false).sodio = numericValue;
-              break;
-            case 'Potasio':
-              Provider.of<datosFormulario>(context, listen: false).potasio = numericValue;
-              break;
-            case 'Cloro':
-              Provider.of<datosFormulario>(context, listen: false).cloro = numericValue;
-              break;
-            case 'Gases Arteriales':
-              Provider.of<datosFormulario>(context, listen: false).gasesArteriales = numericValue;
-              break;
-            default:
-              break;
-          }
+        switch (label) {
+          case 'Leucocitos':
+            Provider.of<datosFormulario>(context, listen: false).leucocitos = numericValue;
+            break;
+          case 'Neutrófilos':
+            Provider.of<datosFormulario>(context, listen: false).neutrofilos = numericValue;
+            break;
+          case 'Linfocitos':
+            Provider.of<datosFormulario>(context, listen: false).linfocitos = numericValue;
+            break;
+          case 'Hemoglobina':
+            Provider.of<datosFormulario>(context, listen: false).hemoglobina = numericValue ?? 0;
+            break;
+          case 'Hematocrito':
+            Provider.of<datosFormulario>(context, listen: false).hematocrito = numericValue;
+            break;
+          case 'Plaquetas':
+            Provider.of<datosFormulario>(context, listen: false).plaquetas = numericValue;
+            break;
+          case 'Bun':
+            Provider.of<datosFormulario>(context, listen: false).bun = numericValue;
+            break;
+          case 'Creatinina':
+            Provider.of<datosFormulario>(context, listen: false).creatinina = numericValue ?? 0;
+            break;
+          case 'Glicemia':
+            Provider.of<datosFormulario>(context, listen: false).glicemia = numericValue;
+            break;
+          case 'HbA1C':
+            Provider.of<datosFormulario>(context, listen: false).hba1c = numericValue;
+            break;
+          case 'TP':
+            Provider.of<datosFormulario>(context, listen: false).tp = numericValue;
+            break;
+          case 'TPT':
+            Provider.of<datosFormulario>(context, listen: false).tpt = numericValue;
+            break;
+          case 'Sodio':
+            Provider.of<datosFormulario>(context, listen: false).sodio = numericValue;
+            break;
+          case 'Potasio':
+            Provider.of<datosFormulario>(context, listen: false).potasio = numericValue;
+            break;
+          case 'Cloro':
+            Provider.of<datosFormulario>(context, listen: false).cloro = numericValue;
+            break;
+          case 'Gases Arteriales':
+            Provider.of<datosFormulario>(context, listen: false).gasesArteriales = numericValue;
+            break;
+          default:
+            break;
         }
       },
     );
