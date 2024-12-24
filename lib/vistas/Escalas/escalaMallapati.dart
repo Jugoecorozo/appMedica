@@ -10,7 +10,7 @@ class EscalaMallampati extends StatefulWidget {
 }
 
 class _EscalaMallampatiState extends State<EscalaMallampati> {
-  int grado = 1;
+  int? grado; // Valor inicial nulo para el placeholder
 
   void _updateValue() {
     String descripcion;
@@ -44,14 +44,15 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         const SizedBox(height: 10),
-        _buildDropdown('Grado', [
-          'Grado I',
-          'Grado II',
-          'Grado III',
-          'Grado IV',
-        ], (value) {
+        _buildDropdown('Grado', {
+          'Elige una opción': null,
+          'Grado I': 1,
+          'Grado II': 2,
+          'Grado III': 3,
+          'Grado IV': 4,
+        }, (value) {
           setState(() {
-            grado = value;
+            grado = value!;
             _updateValue();
           });
         }),
@@ -61,24 +62,23 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> options, ValueChanged<int> onChanged) {
+  Widget _buildDropdown(String label, Map<String, int?> options, ValueChanged<int?> onChanged) {
     return Row(
       children: [
         Text('$label: '),
         const SizedBox(width: 10),
-        DropdownButton<int>(
+        DropdownButton<int?>(
           value: grado,
-          items: options.asMap().entries.map((entry) {
-            int index = entry.key + 1;
-            String text = entry.value;
-            return DropdownMenuItem<int>(
-              value: index,
-              child: Text(text),
+          hint: const Text("Selecciona una opción"), // Placeholder inicial
+          items: options.entries.map((entry) {
+            return DropdownMenuItem<int?>(
+              value: entry.value,
+              child: Text(entry.key),
             );
           }).toList(),
           onChanged: (value) {
             if (value != null) {
-              onChanged(value);
+              onChanged(value); // Actualiza el valor seleccionado
             }
           },
         ),
@@ -86,7 +86,7 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
     );
   }
 
-  Widget _buildImage(int grado) {
+  Widget _buildImage(int? grado) {
     String imagePath;
     String descripcion;
     switch (grado) {
