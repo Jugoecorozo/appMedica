@@ -35,8 +35,7 @@ class _EuroScoreIIScreenState extends State<EuroScoreIIScreen> {
 
   void updateScaleValue() {
     double resultado = calcularEuroSCOREII();
-    print('EuroSCOREII: el riesgo de mortalidad es $resultado%');
-    widget.onValueUpdated('EuroScoreII', 'EurosScoreII: el riesgo de mortalidad es $resultado%');
+    widget.onValueUpdated('EuroScoreII', ' el riesgo de mortalidad es $resultado%');
   }
 
   // Coeficientes para cada variable
