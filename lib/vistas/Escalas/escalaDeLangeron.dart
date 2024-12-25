@@ -38,55 +38,60 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
         
         // Obesidad
         _buildDropdown('Obesidad (IMC > 26 kg/m2)', obesidad, {
+          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
           setState(() {
-            obesidad = value;
+            obesidad = value!;
             _updateValue(); // Actualizar la suma
           });
         }),
         
         // Barba
         _buildDropdown('Barba', barba, {
+          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
           setState(() {
-            barba = value;
+            barba = value!;
             _updateValue(); // Actualizar la suma
           });
         }),
 
         // Edentación
         _buildDropdown('Edentación', edentacion, {
+          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
           setState(() {
-            edentacion = value;
+            edentacion = value!;
             _updateValue(); // Actualizar la suma
           });
         }),
 
         // Apnea
         _buildDropdown('Síndrome de apnea obstructiva del sueño', apnea, {
+          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
           setState(() {
-            apnea = value;
+            apnea = value!;
             _updateValue(); // Actualizar la suma
           });
         }),
 
         // Edad
         _buildDropdown('Edad > 55 años', edad, {
+          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
           setState(() {
-            edad = value;
+            edad = value!;
             _updateValue(); // Actualizar la suma
           });
         }),
@@ -95,16 +100,17 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
   }
 
   // Método para construir el DropdownButton
-  Widget _buildDropdown(String label, int currentValue, Map<String, int> options, ValueChanged<int> onChanged) {
+  Widget _buildDropdown(String label, int currentValue, Map<String, int?> options, ValueChanged<int?> onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('$label: '),
         const SizedBox(width: 10),
-        DropdownButton<int>(
-          value: currentValue,
+        DropdownButton<int?>(
+          value: currentValue == 0 ? null : currentValue,
+          hint: const Text("Selecciona una opción"), // Placeholder inicial
           items: options.entries.map((entry) {
-            return DropdownMenuItem<int>(
+            return DropdownMenuItem<int?>(
               value: entry.value,
               child: Text(entry.key),
             );
