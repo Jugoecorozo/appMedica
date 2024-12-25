@@ -56,6 +56,9 @@ class _ExamenFisicoState extends State<ExamenFisico> {
     _satO2Controller.addListener(() {
       updateScaleValue('SatO2', '${_satO2Controller.text} %');
     });
+    editableSections.forEach((key, value) {
+      updateScaleValue(key, value);
+    });
   }
 
   @override
@@ -101,8 +104,6 @@ class _ExamenFisicoState extends State<ExamenFisico> {
             EscalaBellhouseDore(updateScaleValue: updateScaleValue),
             const SizedBox(height: 20),
             EscalaBrodsky(updateScaleValue: updateScaleValue),
-            const SizedBox(height: 20),
-            ...scaleValues.entries.map((entry) => Text('${entry.key}: ${entry.value}')).toList(),
             const SizedBox(height: 20),
             const Text(
               'Secciones Editables',

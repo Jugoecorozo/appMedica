@@ -10,7 +10,7 @@ class EscalaBellhouseDore extends StatefulWidget {
 }
 
 class _EscalaBellhouseDoreState extends State<EscalaBellhouseDore> {
-  int grado = 1;
+  int? grado;
 
   void _updateValue() {
     String descripcion;
@@ -56,7 +56,7 @@ class _EscalaBellhouseDoreState extends State<EscalaBellhouseDore> {
           });
         }),
         const SizedBox(height: 10),
-        _buildImage(),
+        if (grado != null) _buildImage(),
       ],
     );
   }
@@ -67,6 +67,7 @@ class _EscalaBellhouseDoreState extends State<EscalaBellhouseDore> {
         Text('$label: '),
         const SizedBox(width: 10),
         DropdownButton<int>(
+          hint: const Text('Seleccione un grado'),
           value: grado,
           items: options.asMap().entries.map((entry) {
             int index = entry.key + 1;
@@ -88,6 +89,9 @@ class _EscalaBellhouseDoreState extends State<EscalaBellhouseDore> {
 
   Widget _buildImage() {
     String descripcion;
+    if (grado == null) {
+      return Container(); // No image when no option is selected
+    }
     switch (grado) {
       case 1:
         descripcion = 'Ninguna limitación. Superior a 35°';

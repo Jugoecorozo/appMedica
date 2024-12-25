@@ -346,23 +346,23 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
             const SizedBox(height: 16),
             _buildSubmitButton(),
 
-            Consumer<datosFormulario>(
-                  builder: (context, calculos, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(' ${calculos.patologias}'),
-                        Text(' ${calculos.quirurgicos}'),
-                        Text(' ${calculos.anestesicos}'),
-                        Text(' ${calculos.complicaciones}'),
-                        Text('IPA : ${calculos.ipa}'),
-                        Text(' ${calculos.alergicos}'),
-                        Text(' ${calculos.toxicos}'),
-                        Text(' ${calculos.transfusion}')
-                      ],
-                    );
-                  },
-                ),
+            // Consumer<datosFormulario>(
+            //       builder: (context, calculos, child) {
+            //         return Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Text(' ${calculos.patologias}'),
+            //             Text(' ${calculos.quirurgicos}'),
+            //             Text(' ${calculos.anestesicos}'),
+            //             Text(' ${calculos.complicaciones}'),
+            //             Text('IPA : ${calculos.ipa}'),
+            //             Text(' ${calculos.alergicos}'),
+            //             Text(' ${calculos.toxicos}'),
+            //             Text(' ${calculos.transfusion}')
+            //           ],
+            //         );
+            //       },
+            //     ),
 
           ],
         ),

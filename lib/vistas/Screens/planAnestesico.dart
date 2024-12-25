@@ -39,14 +39,32 @@ class _planAnestesicoState extends State<planAnestesico> {
   }
 
   Future<void> _onSaveButtonPressed() async {
+    final freeText = _freeTextController.text;
+    final freeTextLines = freeText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+
+    // Clear previously added free text lines to avoid duplication
+    selectedOptions.removeWhere((option) => !options.contains(option));
+    selectedOptions.addAll(freeTextLines);
+
     Provider.of<datosFormulario>(context, listen: false)
         .setSelectedOptions(selectedOptions);
-    Provider.of<datosFormulario>(context, listen: false).setFreeText(_freeTextController.text);
+    Provider.of<datosFormulario>(context, listen: false).setFreeText(freeText);
 
     final data = Provider.of<datosFormulario>(context, listen: false);
     final pdfFile = await resultados.generarDocumento(data);
     OpenFile.open(pdfFile.path);
     // Aquí puedes realizar cualquier acción que desees con la lista de opciones seleccionadas
+  }
+
+  void _onFreeTextChanged() {
+    setState(() {
+      final freeText = _freeTextController.text;
+      final freeTextLines = freeText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+
+      // Clear previously added free text lines to avoid duplication
+      selectedOptions.removeWhere((option) => !options.contains(option));
+      selectedOptions.addAll(freeTextLines);
+    });
   }
 
   @override
@@ -77,6 +95,7 @@ class _planAnestesicoState extends State<planAnestesico> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: null,
+                onChanged: (text) => _onFreeTextChanged(),
               ),
             );
           }

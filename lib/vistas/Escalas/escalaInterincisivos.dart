@@ -10,7 +10,7 @@ class EscalaInterincisivos extends StatefulWidget {
 }
 
 class _EscalaInterincisivosState extends State<EscalaInterincisivos> {
-  int clase = 1;
+  int? clase;
 
   void _updateValue() {
     String descripcion;
@@ -56,7 +56,7 @@ class _EscalaInterincisivosState extends State<EscalaInterincisivos> {
           });
         }),
         const SizedBox(height: 10),
-        _buildImage(),
+        if (clase != null) _buildImage(),
       ],
     );
   }
@@ -67,6 +67,7 @@ class _EscalaInterincisivosState extends State<EscalaInterincisivos> {
         Text('$label: '),
         const SizedBox(width: 10),
         DropdownButton<int>(
+          hint: const Text('Seleccione una clase'),
           value: clase,
           items: options.asMap().entries.map((entry) {
             int index = entry.key + 1;
@@ -88,6 +89,9 @@ class _EscalaInterincisivosState extends State<EscalaInterincisivos> {
 
   Widget _buildImage() {
     String descripcion;
+    if (clase == null) {
+      return Container(); // No image when no option is selected
+    }
     switch (clase) {
       case 1:
         descripcion = 'Distancia interincisivos >3 cm, sin dificultad en la laringoscopia';

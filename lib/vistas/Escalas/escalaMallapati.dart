@@ -30,8 +30,8 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
       default:
         descripcion = '';
     }
-    String result = 'Escala de MALLAMPATI: Grado $grado, $descripcion';
-    widget.updateScaleValue('Escala de Mallampati', result);
+    String result = ' Grado $grado, $descripcion';
+    widget.updateScaleValue('Escala de MALLAMPATI:', result);
   }
 
   @override
@@ -45,7 +45,6 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
         ),
         const SizedBox(height: 10),
         _buildDropdown('Grado', {
-          'Elige una opción': null,
           'Grado I': 1,
           'Grado II': 2,
           'Grado III': 3,
@@ -87,6 +86,9 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
   }
 
   Widget _buildImage(int? grado) {
+    if (grado == null) {
+      return Container(); // No image when no option is selected
+    }
     String imagePath;
     String descripcion;
     switch (grado) {

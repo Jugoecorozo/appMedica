@@ -10,7 +10,7 @@ class EscalaPatilAldreti extends StatefulWidget {
 }
 
 class _EscalaPatilAldretiState extends State<EscalaPatilAldreti> {
-  int clase = 1;
+  int? clase; // Valor inicial nulo para el placeholder
 
   void _updateValue() {
     String descripcion;
@@ -64,6 +64,7 @@ class _EscalaPatilAldretiState extends State<EscalaPatilAldreti> {
         const SizedBox(width: 10),
         DropdownButton<int>(
           value: clase,
+          hint: const Text("Elige una opción"), // Add hint
           items: options.asMap().entries.map((entry) {
             int index = entry.key + 1;
             String text = entry.value;
@@ -83,6 +84,9 @@ class _EscalaPatilAldretiState extends State<EscalaPatilAldreti> {
   }
 
   Widget _buildImage() {
+    if (clase == null) {
+      return Container(); // No image when no option is selected
+    }
     String descripcion;
     switch (clase) {
       case 1:

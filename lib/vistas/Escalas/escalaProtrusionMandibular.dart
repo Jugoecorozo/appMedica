@@ -10,7 +10,7 @@ class EscalaProtrusionMandibular extends StatefulWidget {
 }
 
 class _EscalaProtrusionMandibularState extends State<EscalaProtrusionMandibular> {
-  int grado = 1;
+  int? grado;
 
   void _updateValue() {
     String descripcion;
@@ -52,7 +52,7 @@ class _EscalaProtrusionMandibularState extends State<EscalaProtrusionMandibular>
           });
         }),
         const SizedBox(height: 10),
-        _buildImage(grado),
+        if (grado != null) _buildImage(grado!),
       ],
     );
   }
@@ -63,6 +63,7 @@ class _EscalaProtrusionMandibularState extends State<EscalaProtrusionMandibular>
         Text('$label: '),
         const SizedBox(width: 10),
         DropdownButton<int>(
+          hint: const Text('Seleccione un grado'),
           value: grado,
           items: options.asMap().entries.map((entry) {
             int index = entry.key + 1;

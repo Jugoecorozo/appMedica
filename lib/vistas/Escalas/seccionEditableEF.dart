@@ -48,7 +48,9 @@ class _EditableSectionState extends State<EditableSection> {
             border: OutlineInputBorder(),
           ),
           onChanged: (value) {
-            widget.updateScaleValue(widget.title, value);
+            if (value != widget.initialText) {
+              widget.updateScaleValue(widget.title, value);
+            }
           },
         ),
         const SizedBox(height: 20),

@@ -9,7 +9,7 @@ class datosPersonales extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _fechaNacimientoController = TextEditingController();
-  String _sexo = 'Masculino';
+  String? _sexo;
   final TextEditingController _pesoController = TextEditingController();
   final TextEditingController _tallaController = TextEditingController();
 
@@ -68,16 +68,19 @@ class datosPersonales extends StatelessWidget {
                 DropdownButtonFormField(
                   value: _sexo,
                   onChanged: (value) {
-                    _sexo = value!;
+                  _sexo = value!;
                   },
                   items: ['Masculino', 'Femenino']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
                   }).toList(),
-                  decoration: const InputDecoration(labelText: 'Sexo'),
+                  decoration: const InputDecoration(
+                  labelText: 'Sexo',
+                  hintText: 'Selecciona tu sexo',
+                  ),
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
@@ -127,15 +130,15 @@ class datosPersonales extends StatelessWidget {
                         Provider.of<datosFormulario>(context,listen: false)
                             .updatePeso(peso);
                         Provider.of<datosFormulario>(context,listen: false)
-                            .updateSexo(_sexo);
+                            .updateSexo(_sexo!);
                         Provider.of<datosFormulario>(context,listen: false)
                             .updateAltura(talla);
                         Provider.of<datosFormulario>(context, listen: false)
                             .updateIMC(peso, talla);
                         Provider.of<datosFormulario>(context, listen: false)
-                            .updatePesoIdeal(talla, _sexo);
+                            .updatePesoIdeal(talla, _sexo!);
                         Provider.of<datosFormulario>(context, listen: false)
-                            .updatePesoPredicho(talla, _sexo);
+                            .updatePesoPredicho(talla, _sexo!);
                         Provider.of<datosFormulario>(context, listen: false)
                             .updateVolemia(peso);
                         Provider.of<datosFormulario>(context, listen: false)

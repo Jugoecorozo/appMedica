@@ -11,8 +11,8 @@ class EuroScoreIIScreen extends StatefulWidget {
 class _EuroScoreIIScreenState extends State<EuroScoreIIScreen> {
   // Variables para cada factor de riesgo
   int edad = 0;
-  String genero = 'Masculino';
-  String creatinina = 'Normal';
+  String genero = 'no seleccionado';
+  String creatinina = 'no seleccionado';
   bool dialisis = false;
   bool arteriopatia = false;
   bool movilidadReducida = false;
@@ -21,13 +21,13 @@ class _EuroScoreIIScreenState extends State<EuroScoreIIScreen> {
   bool endocarditisActiva = false;
   bool situacionCritica = false;
   bool diabetesInsulina = false;
-  String nyha = 'I';
+  String nyha = 'no seleccionado';
   bool angorInestable = false;
-  String fraccionEyeccion = '> 50%';
+  String fraccionEyeccion = 'no seleccionado';
   bool iamReciente = false;
-  String hipertensionPulmonar = 'Normal';
-  String tipoCirugia = 'Electiva';
-  String intervencion = 'CABG aislada';
+  String hipertensionPulmonar = 'no seleccionado';
+  String tipoCirugia = 'no seleccionado';
+  String intervencion = 'no seleccionado';
   bool cirugiaAortaToracica = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -146,301 +146,206 @@ class _EuroScoreIIScreenState extends State<EuroScoreIIScreen> {
 
     double riesgo = (beta0 + beta1);
     double eLogit = 2.71828;
-    double probabilidadMortalidad = (pow(eLogit, riesgo)) / (1 + pow(eLogit, riesgo));
+    num variablew = pow(eLogit, riesgo);
+    double probabilidadMortalidad = (variablew) / (1 +variablew);
     return probabilidadMortalidad * 100;
+  }
+
+  Widget buildRadioButton(String title, bool value, Function(bool) onChanged) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title),
+        Row(
+          children: [
+            Radio(
+              value: true,
+              groupValue: value,
+              onChanged: (newValue) {
+                setState(() {
+                  onChanged(newValue as bool);
+                  updateScaleValue();
+                });
+              },
+            ),
+            Text('Sí'),
+            Radio(
+              value: false,
+              groupValue: value,
+              onChanged: (newValue) {
+                setState(() {
+                  onChanged(newValue as bool);
+                  updateScaleValue();
+                });
+              },
+            ),
+            Text('No'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildDropdownButton(String label, String value, List<String> items, Function(String) onChanged) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(labelText: label, hintText: 'Seleccione una opción'),
+      value: value,
+      items: items.map((String item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+      onChanged: (newValue) {
+        setState(() {
+          onChanged(newValue!);
+          updateScaleValue();
+        });
+      },
+      validator: (value) {
+        if (value == 'no seleccionado') {
+          return 'Por favor seleccione una opción';
+        }
+        return null;
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Edad
-            TextFormField(
-              controller: _edadController,
-              decoration: InputDecoration(labelText: 'Edad'),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Por favor ingrese una edad';
-                }
-                final int? edad = int.tryParse(value);
-                if (edad == null || edad < 0) {
-                  return 'Por favor ingrese un número válido';
-                }
-                return null;
-              },
-              onChanged: (value) {
-                setState(() {
-                  edad = int.tryParse(value) ?? 0;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Género
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Género'),
-              value: genero,
-              items: ['Masculino', 'Femenino'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  genero = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Creatinina
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Creatinina (ClCr)'),
-              value: creatinina,
-              items: ['Normal', 'Moderado', 'Severo'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  creatinina = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Diálisis
-            SwitchListTile(
-              title: Text('Diálisis'),
-              value: dialisis,
-              onChanged: (value) {
-                setState(() {
-                  dialisis = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Arteriopatía extracardiaca
-            SwitchListTile(
-              title: Text('Arteriopatía extracardiaca'),
-              value: arteriopatia,
-              onChanged: (value) {
-                setState(() {
-                  arteriopatia = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Movilidad reducida
-            SwitchListTile(
-              title: Text('Movilidad reducida'),
-              value: movilidadReducida,
-              onChanged: (value) {
-                setState(() {
-                  movilidadReducida = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Cirugía cardíaca previa
-            SwitchListTile(
-              title: Text('Cirugía cardíaca previa'),
-              value: cirugiaCardiacaPrevia,
-              onChanged: (value) {
-                setState(() {
-                  cirugiaCardiacaPrevia = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // EPOC
-            SwitchListTile(
-              title: Text('EPOC'),
-              value: epoc,
-              onChanged: (value) {
-                setState(() {
-                  epoc = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Endocarditis activa
-            SwitchListTile(
-              title: Text('Endocarditis activa'),
-              value: endocarditisActiva,
-              onChanged: (value) {
-                setState(() {
-                  endocarditisActiva = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Situación crítica
-            SwitchListTile(
-              title: Text('Situación crítica'),
-              value: situacionCritica,
-              onChanged: (value) {
-                setState(() {
-                  situacionCritica = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Diabetes insulinodependiente
-            SwitchListTile(
-              title: Text('Diabetes insulinodependiente'),
-              value: diabetesInsulina,
-              onChanged: (value) {
-                setState(() {
-                  diabetesInsulina = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // NYHA
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'NYHA'),
-              value: nyha,
-              items: ['I', 'II', 'III', 'IV'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  nyha = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Angor inestable
-            SwitchListTile(
-              title: Text('Angor inestable'),
-              value: angorInestable,
-              onChanged: (value) {
-                setState(() {
-                  angorInestable = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Fracción de eyección
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Fracción de eyección'),
-              value: fraccionEyeccion,
-              items: ['> 50%', '31-50%', '21-30%', '< 20%'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  fraccionEyeccion = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // IAM reciente
-            SwitchListTile(
-              title: Text('IAM reciente'),
-              value: iamReciente,
-              onChanged: (value) {
-                setState(() {
-                  iamReciente = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Hipertensión pulmonar
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Hipertensión pulmonar'),
-              value: hipertensionPulmonar,
-              items: ['Normal', '31-55 mmHg', '>55 mmHg'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  hipertensionPulmonar = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Tipo de cirugía
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Tipo de cirugía'),
-              value: tipoCirugia,
-              items: ['Electiva', 'Urgente', 'Emergente', 'De rescate'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  tipoCirugia = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Intervención
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: 'Intervención'),
-              value: intervencion,
-              items: ['CABG aislada', 'Simple No CABG', '2 procedimientos', '3 procedimientos'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  intervencion = newValue!;
-                  updateScaleValue();
-                });
-              },
-            ),
-
-            // Cirugía sobre la aorta torácica
-            SwitchListTile(
-              title: Text('Cirugía sobre la aorta torácica'),
-              value: cirugiaAortaToracica,
-              onChanged: (value) {
-                setState(() {
-                  cirugiaAortaToracica = value;
-                  updateScaleValue();
-                });
-              },
-            ),
-          ],
+    return Column(
+      children: [
+         const Text(
+          'EuroSCORE II',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
-      ),
+        SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Edad
+                TextFormField(
+                  controller: _edadController,
+                  decoration: InputDecoration(labelText: 'Edad'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingrese una edad';
+                    }
+                    final int? edad = int.tryParse(value);
+                    if (edad == null || edad < 0) {
+                      return 'Por favor ingrese un número válido';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      edad = int.tryParse(value) ?? 0;
+                      updateScaleValue();
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 16.0),
+        
+                buildDropdownButton('Género', genero, ['no seleccionado', 'Masculino', 'Femenino'], (newValue) {
+                  genero = newValue;
+                }),
+                        const SizedBox(height: 16.0),
+
+                buildDropdownButton('Creatinina (ClCr)', creatinina, ['no seleccionado', 'Normal', 'Moderado', 'Severo'], (newValue) {
+                  creatinina = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Diálisis', dialisis, (newValue) {
+                  dialisis = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Arteriopatía extracardiaca', arteriopatia, (newValue) {
+                  arteriopatia = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Movilidad reducida', movilidadReducida, (newValue) {
+                  movilidadReducida = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Cirugía cardíaca previa', cirugiaCardiacaPrevia, (newValue) {
+                  cirugiaCardiacaPrevia = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('EPOC', epoc, (newValue) {
+                  epoc = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Endocarditis activa', endocarditisActiva, (newValue) {
+                  endocarditisActiva = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Situación crítica', situacionCritica, (newValue) {
+                  situacionCritica = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Diabetes insulinodependiente', diabetesInsulina, (newValue) {
+                  diabetesInsulina = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildDropdownButton('NYHA', nyha, ['no seleccionado', 'I', 'II', 'III', 'IV'], (newValue) {
+                  nyha = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Angor inestable', angorInestable, (newValue) {
+                  angorInestable = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildDropdownButton('Fracción de eyección', fraccionEyeccion, ['no seleccionado', '> 50%', '31-50%', '21-30%', '< 20%'], (newValue) {
+                  fraccionEyeccion = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('IAM reciente', iamReciente, (newValue) {
+                  iamReciente = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildDropdownButton('Hipertensión pulmonar', hipertensionPulmonar, ['no seleccionado', 'Normal', '31-55 mmHg', '>55 mmHg'], (newValue) {
+                  hipertensionPulmonar = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildDropdownButton('Tipo de cirugía', tipoCirugia, ['no seleccionado', 'Electiva', 'Urgente', 'Emergente', 'De rescate'], (newValue) {
+                  tipoCirugia = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildDropdownButton('Intervención', intervencion, ['no seleccionado', 'CABG aislada', 'Simple No CABG', '2 procedimientos', '3 procedimientos'], (newValue) {
+                  intervencion = newValue;
+                }),
+        
+                const SizedBox(height: 16.0),
+                buildRadioButton('Cirugía sobre la aorta torácica', cirugiaAortaToracica, (newValue) {
+                  cirugiaAortaToracica = newValue;
+                }),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

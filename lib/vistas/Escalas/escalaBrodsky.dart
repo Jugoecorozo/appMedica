@@ -10,7 +10,7 @@ class EscalaBrodsky extends StatefulWidget {
 }
 
 class _EscalaBrodskyState extends State<EscalaBrodsky> {
-  int seleccion = 1;
+  int? seleccion;
 
   void _updateValue() {
     String descripcion;
@@ -31,7 +31,7 @@ class _EscalaBrodskyState extends State<EscalaBrodsky> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Índice de Brodsky',
@@ -48,7 +48,7 @@ class _EscalaBrodskyState extends State<EscalaBrodsky> {
           });
         }),
         const SizedBox(height: 10),
-        _buildImage(seleccion),
+        if (seleccion != null) _buildImage(seleccion!),
       ],
     );
   }
@@ -59,6 +59,7 @@ class _EscalaBrodskyState extends State<EscalaBrodsky> {
         Text('$label: '),
         const SizedBox(width: 10),
         DropdownButton<int>(
+          hint: const Text('Seleccione una opción'),
           value: seleccion,
           items: options.asMap().entries.map((entry) {
             int index = entry.key + 1;

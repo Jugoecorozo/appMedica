@@ -58,16 +58,16 @@ class ParaclinicosWidget extends StatelessWidget {
                 },
                 child: const Text('Guardar'),
               ),
-              Consumer<datosFormulario>(
-                builder: (context, calculos, child) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('PERDIDAS : ${calculos.perdidasPermisibles}'),
-                    ],
-                  );
-                },
-              ),
+              // Consumer<datosFormulario>(
+              //   builder: (context, calculos, child) {
+              //     return Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text('PERDIDAS : ${calculos.perdidasPermisibles}'),
+              //       ],
+              //     );
+              //   },
+              // ),
             ],
           ),
         ),
