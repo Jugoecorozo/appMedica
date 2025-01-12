@@ -30,7 +30,7 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
       default:
         descripcion = '';
     }
-    String result = ' Grado $grado, $descripcion';
+    String result = 'Grado $grado, $descripcion';
     widget.updateScaleValue('Escala de MALLAMPATI:', result);
   }
 

@@ -27,7 +27,7 @@ class _EscalaProtrusionMandibularState extends State<EscalaProtrusionMandibular>
       default:
         descripcion = '';
     }
-    String result = 'Protrusión mandibular: Grado $grado, $descripcion';
+    String result = '$grado, $descripcion';
     widget.updateScaleValue('Protrusión Mandibular', result);
   }
 

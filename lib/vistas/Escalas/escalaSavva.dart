@@ -30,7 +30,7 @@ class _EscalaSavvaState extends State<EscalaSavva> {
       default:
         descripcion = '';
     }
-    String result = 'Índice de SAVVA: $descripcion';
+    String result = '$descripcion';
     widget.updateScaleValue('Índice de Savva', result);
   }
 

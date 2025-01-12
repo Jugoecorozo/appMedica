@@ -27,7 +27,7 @@ class _EscalaPatilAldretiState extends State<EscalaPatilAldreti> {
       default:
         descripcion = '';
     }
-    String result = 'Escala de PATIL - ALDRETI: $descripcion';
+    String result = '$descripcion';
     widget.updateScaleValue('Escala de Patil - Aldreti', result);
   }
 

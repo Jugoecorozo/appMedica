@@ -18,7 +18,7 @@ class _EscalaGlasgowState extends State<EscalaGlasgow> {
   void _updateValue() {
     final int total = (respuestaOcular ?? 0) + (respuestaVerbal ?? 0) + (respuestaMotora ?? 0);
     final String result =
-        'Escala de Glasgow: $total Puntos (Respuesta ocular: ${respuestaOcular ?? 0} puntos, Respuesta verbal: ${respuestaVerbal ?? 0} puntos, Respuesta motora: ${respuestaMotora ?? 0} puntos)';
+        '$total Puntos (Respuesta ocular: ${respuestaOcular ?? 0} puntos, Respuesta verbal: ${respuestaVerbal ?? 0} puntos, Respuesta motora: ${respuestaMotora ?? 0} puntos)';
     widget.updateScaleValue('Escala de Glasgow', result); // Enviar resultado al padre
   }
 

@@ -30,7 +30,7 @@ class _EscalaInterincisivosState extends State<EscalaInterincisivos> {
       default:
         descripcion = '';
     }
-    String result = 'Distancia Interincisivos: $descripcion';
+    String result = '$descripcion';
     widget.updateScaleValue('Distancia Interincisivos', result);
   }
 

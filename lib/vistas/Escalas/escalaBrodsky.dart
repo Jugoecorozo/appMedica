@@ -24,7 +24,7 @@ class _EscalaBrodskyState extends State<EscalaBrodsky> {
       default:
         descripcion = '';
     }
-    String result = 'Índice de BRODSKY: $descripcion';
+    String result = '$descripcion';
     widget.updateScaleValue('Índice de Brodsky', result);
   }
 

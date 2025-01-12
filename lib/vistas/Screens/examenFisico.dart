@@ -13,7 +13,6 @@ import 'package:app_medica/vistas/Screens/planAnestesico.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class ExamenFisico extends StatefulWidget {
   const ExamenFisico({super.key});
 
@@ -33,6 +32,7 @@ class _ExamenFisicoState extends State<ExamenFisico> {
     'Tórax': 'Simétrico, ruidos cardiacos rítmicos no soplos, murmullo vesicular conservado no estertores, sin alteraciones en dinámica ventilatoria',
     'Abdomen': 'Peristalsis presente, blando, depresible, no doloroso a la palpación superficial y profunda.',
     'Neurológico': 'No déficit, no focalizaciones, sin alteraciones cognoscitivas',
+    'Extremidades': 'Simétricas, llenado capilar menor a 2 seg.',
   };
 
   void updateScaleValue(String scale, String value) {
@@ -57,7 +57,7 @@ class _ExamenFisicoState extends State<ExamenFisico> {
       updateScaleValue('SatO2', '${_satO2Controller.text} %');
     });
     editableSections.forEach((key, value) {
-      updateScaleValue(key, value);
+      scaleValues[key] = value;
     });
   }
 
@@ -120,7 +120,7 @@ class _ExamenFisicoState extends State<ExamenFisico> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Provider.of<datosFormulario>(context,listen:false).setExamenFisico(scaleValues);
+                Provider.of<datosFormulario>(context, listen: false).setExamenFisico(scaleValues);
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const planAnestesico()));
               },
               child: const Text('Siguiente'),

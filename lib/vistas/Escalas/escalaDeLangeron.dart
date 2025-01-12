@@ -21,7 +21,7 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
   void _updateValue() {
     final int total = obesidad + barba + edentacion + apnea + edad;
     final String result =
-        'Escala de Langeron: $total puntos, ${total >= 2 ? 'probable ventilación difícil con máscara facial' : 'ventilación fácil con máscara facial'}';
+        '$total puntos, ${total >= 2 ? 'probable ventilación difícil con máscara facial' : 'ventilación fácil con máscara facial'}';
     widget.updateScaleValue('Escala de Langeron', result); // Enviar resultado al padre
   }
 

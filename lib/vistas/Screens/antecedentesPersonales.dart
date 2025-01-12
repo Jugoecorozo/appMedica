@@ -303,8 +303,6 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
       asa = max(asa, 2);
     }
   }
-
-
   Provider.of<datosFormulario>(context, listen: false).updateASA(asa);
 }
   @override

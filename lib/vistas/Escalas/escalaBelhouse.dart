@@ -30,7 +30,7 @@ class _EscalaBellhouseDoreState extends State<EscalaBellhouseDore> {
       default:
         descripcion = '';
     }
-    String result = "Escala Bellhouse / Dore: Grado $grado, $descripcion";
+    String result = "$grado, $descripcion";
     widget.updateScaleValue('Escala Bellhouse / Dore', result);
   }
 
