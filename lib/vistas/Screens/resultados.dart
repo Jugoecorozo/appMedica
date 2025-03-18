@@ -1,22 +1,20 @@
 import 'package:app_medica/calculos/datosFormulario.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:open_file/open_file.dart';
 
 class resultados {
   static Future<File> generarDocumento(datosFormulario datos) async {
     String clasificacionIMC(double imc) {
-      if (imc < 18.5) return 'Bajo Peso ${imc.toStringAsFixed(2)}';
-      if (imc < 25) return 'Normopeso ${imc.toStringAsFixed(2)}';
-      if (imc < 30) return 'Sobrepeso ${imc.toStringAsFixed(2)}';
-      if (imc < 35) return 'Obesidad tipo 1 ${imc.toStringAsFixed(2)}';
-      if (imc < 40) return 'Obesidad tipo 2 ${imc.toStringAsFixed(2)}';
-      if (imc < 50) return 'Obesidad tipo 3 o mórbida ${imc.toStringAsFixed(2)}';
-      return 'Obesidad tipo 4 o extrema ${imc.toStringAsFixed(2)}';
+      if (imc < 18.5) return '${imc.toStringAsFixed(2)}, Bajo Peso. ';
+      if (imc < 25) return '${imc.toStringAsFixed(2)}, Normopeso. ';
+      if (imc < 30) return '${imc.toStringAsFixed(2)}, Sobrepeso. ';
+      if (imc < 35) return '${imc.toStringAsFixed(2)}, Obesidad tipo 1. ';
+      if (imc < 40) return '${imc.toStringAsFixed(2)}, Obesidad tipo 2. ';
+      if (imc < 50) return '${imc.toStringAsFixed(2)}, Obesidad tipo 3 o mórbida. ';
+      return '${imc.toStringAsFixed(2)}, Obesidad tipo 4 o extrema. ';
     }
 
     String clasificacionASA(int asa) {
@@ -50,14 +48,22 @@ class resultados {
         pw.Text('Peso predicho: ${datos.pesoPredicho.toStringAsFixed(2)}Kg.'),
         pw.Text('IMC: ${clasificacionIMC(datos.imc)}'),
         pw.Text('Volemia: ${datos.volemia.round()}ml.'),
-        pw.Text(
-            'Tasa de filtración glomerular: ${datos.tasaFiltracionGlomerular.toStringAsFixed(1)} ml/min.'),
+        if (datos.tasaFiltracionGlomerular != 0)
+          pw.Text('Tasa de filtración glomerular: ${datos.tasaFiltracionGlomerular.toStringAsFixed(1)} ml/min.'),
 
         pw.SizedBox(height: 20),
 
         pw.Text('Antecedentes Personales',
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.Divider(thickness: 1.0, color: PdfColors.black),
+        if (datos.patologias.isEmpty &&
+            datos.quirurgicos.isEmpty &&
+            datos.anestesicos.isEmpty &&
+            datos.complicaciones.isEmpty &&
+            datos.alergicos.isEmpty &&
+            datos.toxicos.isEmpty &&
+            datos.transfusion.isEmpty)
+          pw.Text('Sin antecedentes de importancia.'),
         if (datos.patologias.isNotEmpty)
           pw.Text('Patológicas: ${datos.patologias.join(', ')}'),
         if (datos.quirurgicos.isNotEmpty)
@@ -91,6 +97,8 @@ class resultados {
           pw.Text('Neutrófilos: ${datos.neutrofilos?.round()}'),
         if (datos.linfocitos != null)
           pw.Text('Linfocitos: ${datos.linfocitos?.round()}'),
+        if (datos.hemoglobina != null)
+          pw.Text('Hemoglobina: ${datos.hemoglobina}'),
         if (datos.hematocrito != null)
           pw.Text('Hematocrito: ${datos.hematocrito?.round()}'),
         if (datos.plaquetas != null) pw.Text('Plaquetas: ${datos.plaquetas?.round()}'),
@@ -129,8 +137,8 @@ class resultados {
             text: '${[
           10,
           20,
-          30
-              ][i]}% de pérdidas sanguíneas permisibles: ${(datos.perdidasPermisibles[i] / 1000).toStringAsFixed(1)}ml'),
+            30
+              ][i]}% de pérdidas sanguíneas permisibles: ${datos.perdidasPermisibles[i].round()}ml'),
         ] else
           pw.Container(),
 

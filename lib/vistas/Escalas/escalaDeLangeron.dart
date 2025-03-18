@@ -38,7 +38,6 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
         
         // Obesidad
         _buildDropdown('Obesidad (IMC > 26 kg/m2)', obesidad, {
-          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
@@ -50,7 +49,6 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
         
         // Barba
         _buildDropdown('Barba', barba, {
-          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
@@ -62,7 +60,6 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
 
         // Edentación
         _buildDropdown('Edentación', edentacion, {
-          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
@@ -74,7 +71,6 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
 
         // Apnea
         _buildDropdown('Síndrome de apnea obstructiva del sueño', apnea, {
-          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
@@ -86,7 +82,6 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
 
         // Edad
         _buildDropdown('Edad > 55 años', edad, {
-          'Elige una opción': null,
           'No (0 puntos)': 0,
           'Sí (1 punto)': 1,
         }, (value) {
@@ -107,8 +102,7 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
         Text('$label: '),
         const SizedBox(width: 10),
         DropdownButton<int?>(
-          value: currentValue == 0 ? null : currentValue,
-          hint: const Text("Selecciona una opción"), // Placeholder inicial
+          value: currentValue,
           items: options.entries.map((entry) {
             return DropdownMenuItem<int?>(
               value: entry.value,
@@ -116,9 +110,9 @@ class _EscalaLangeronState extends State<EscalaLangeron> {
             );
           }).toList(),
           onChanged: (value) {
-            if (value != null) {
+            setState(() {
               onChanged(value); // Actualiza el valor seleccionado
-            }
+            });
           },
         ),
       ],

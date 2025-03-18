@@ -2,7 +2,7 @@ import 'dart:math';
 
 class CalculosApp{
 
-// Funciones para calcular los valores de los indicadores
+  // Funciones para calcular los valores de los indicadores
 
   static double calcularIMC(double peso, double altura){
     return peso / (altura * altura);
@@ -24,15 +24,39 @@ class CalculosApp{
     return peso * 70;
   }
 
-  //Calculo de perdidas permisibles, en la variable tasa se ingresará el porcentaje de perdida (ejemplo: 0.1 para 10% de perdida)
+  // Calculo de perdidas permisibles, en la variable tasa se ingresará el porcentaje de perdida (ejemplo: 0.1 para 10% de perdida)
   static List<double> perdidasPermisibles(double hemoglobina, double volemia) {
-    List<double> tasas = [0.1, 0.2, 0.3];
-    return tasas.map((tasa) => (((hemoglobina - (hemoglobina - (hemoglobina * tasa))) / ((hemoglobina + (hemoglobina - (hemoglobina*tasa)))/2 )) * volemia)).toList();
+    List<double> perdidas = [];
+
+    double tasa10 = 0.10;
+    double hemoglobinaReducida10 = hemoglobina - (hemoglobina * tasa10);
+    double cambioHb10 = hemoglobina - hemoglobinaReducida10;
+    double promedio10 = (hemoglobina + hemoglobinaReducida10) / 2;
+    double volumenPerdido10 = (cambioHb10 / promedio10) * volemia;
+    perdidas.add(volumenPerdido10);
+
+    double tasa20 = 0.20;
+    double hemoglobinaReducida20 = hemoglobina - (hemoglobina * tasa20);
+    double cambioHb20 = hemoglobina - hemoglobinaReducida20;
+    double promedio20 = (hemoglobina + hemoglobinaReducida20) / 2;
+    double volumenPerdido20 = (cambioHb20 / promedio20) * volemia;
+    perdidas.add(volumenPerdido20);
+
+    double tasa30 = 0.30;
+    double hemoglobinaReducida30 = hemoglobina - (hemoglobina * tasa30);
+    double cambioHb30 = hemoglobina - hemoglobinaReducida30;
+    double promedio30 = (hemoglobina + hemoglobinaReducida30) / 2;
+    double volumenPerdido30 = (cambioHb30 / promedio30) * volemia;
+    perdidas.add(volumenPerdido30);
+
+    return perdidas;
   }
 
-
-  static double tasaDeFiltracionGlomerular(int edad, double creatinina, double peso, String sexo) {
-    double resultado = ((140 - edad) * peso )/ (72 * creatinina);
+  static double tasaDeFiltracionGlomerular(int edad, double? creatinina, double peso, String sexo) {
+    if (creatinina == 0) {
+      return 0;
+    }
+    double resultado = ((140 - edad) * peso )/ (72 * creatinina!);
     if (sexo == "Femenino") {
       resultado *= 0.85;
     }
@@ -50,6 +74,4 @@ class CalculosApp{
 
     return (pow(euler, logit) / (1 + pow(euler, logit))) * 100;
   }
-
-
 }

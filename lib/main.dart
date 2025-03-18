@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:app_medica/calculos/datosFormulario.dart';
 import 'package:app_medica/vistas/Screens/datosPersonales.dart';
+import 'package:app_medica/vistas/Screens/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:json_theme_plus/json_theme_plus.dart';
+import 'package:app_medica/vistas/Screens/splashScreen.dart' as screens;
 
 void main() async {
 
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: theme,
       darkTheme: darkTheme,
-      home: datosPersonales()    
+      home: SplashScreen()    
       );
   }
 }

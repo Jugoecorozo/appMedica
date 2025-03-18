@@ -4,8 +4,16 @@ import 'package:app_medica/vistas/Screens/tipoDeCirugia.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ParaclinicosWidget extends StatelessWidget {
-  const ParaclinicosWidget({Key? key}) : super(key: key);
+class ParaclinicosWidget extends StatefulWidget {
+  const ParaclinicosWidget({super.key});
+
+  @override
+  _ParaclinicosWidgetState createState() => _ParaclinicosWidgetState();
+}
+
+class _ParaclinicosWidgetState extends State<ParaclinicosWidget> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _gasesArterialesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,59 +24,67 @@ class ParaclinicosWidget extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'PARACLÍNICOS',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              _buildNumericField(context, 'Leucocitos'),
-              _buildNumericField(context, 'Neutrófilos'),
-              _buildNumericField(context, 'Linfocitos'),
-              _buildNumericField(context, 'Hemoglobina'),
-              _buildNumericField(context, 'Hematocrito'),
-              _buildNumericField(context, 'Plaquetas'),
-              _buildNumericField(context, 'Bun'),
-              _buildNumericField(context, 'Creatinina'),
-              _buildNumericField(context, 'Glicemia'),
-              _buildNumericField(context, 'HbA1C'),
-              _buildNumericField(context, 'TP'),
-              _buildNumericField(context, 'TPT'),
-              _buildNumericField(context, 'Sodio'),
-              _buildNumericField(context, 'Potasio'),
-              _buildNumericField(context, 'Cloro'),
-              _buildNumericField(context, 'Gases Arteriales'),
-              _buildTextField(context, 'Otros'),
-              const SizedBox(height: 20),
-              const Text(
-                'AYUDAS DIAGNOSTICAS',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(context, 'EKG'),
-              _buildTextField(context, 'Ecocardiograma'),
-              _buildTextField(context, 'Rx de tórax'),
-              _buildTextField(context, 'Otro'),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _saveData(context);
-                },
-                child: const Text('Guardar'),
-              ),
-              // Consumer<datosFormulario>(
-              //   builder: (context, calculos, child) {
-              //     return Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('PERDIDAS : ${calculos.perdidasPermisibles}'),
-              //       ],
-              //     );
-              //   },
-              // ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'PARACLÍNICOS',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                _buildNumericField(context, 'Leucocitos'),
+                _buildNumericField(context, 'Neutrófilos'),
+                _buildNumericField(context, 'Linfocitos'),
+                _buildNumericField(context, 'Hemoglobina'),
+                _buildNumericField(context, 'Hematocrito'),
+                _buildNumericField(context, 'Plaquetas'),
+                _buildNumericField(context, 'Bun'),
+                _buildNumericField(context, 'Creatinina'),
+                _buildNumericField(context, 'Glicemia'),
+                _buildNumericField(context, 'HbA1C'),
+                _buildNumericField(context, 'TP'),
+                _buildNumericField(context, 'TPT'),
+                _buildNumericField(context, 'Sodio'),
+                _buildNumericField(context, 'Potasio'),
+                _buildNumericField(context, 'Cloro'),
+                const Text(
+                  'Gases Arteriales:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8.0),
+                TextFormField(
+                  controller: _gasesArterialesController,
+                  decoration: const InputDecoration(
+                    labelText: 'Gases Arteriales',
+                  ),
+                ),
+                const SizedBox(height: 32.0),
+                _buildTextField(context, 'Otros'),
+                const SizedBox(height: 20),
+                const Text(
+                  'AYUDAS DIAGNOSTICAS',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                _buildTextField(context, 'EKG'),
+                _buildTextField(context, 'Ecocardiograma'),
+                _buildTextField(context, 'Rx de tórax'),
+                _buildTextField(context, 'Otro'),
+                const SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _saveData(context);
+                      }
+                    },
+                    child: const Text('Guardar'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -83,7 +99,7 @@ class ParaclinicosWidget extends StatelessWidget {
     String sexo = Provider.of<datosFormulario>(context, listen: false).sexo;
     Provider.of<datosFormulario>(context, listen: false)
         .updateTasaFiltracionGlomerular(
-            datos.edad, datos.creatinina!, datos.peso, sexo);
+            datos.edad, datos.creatinina ?? 0, datos.peso, sexo);
     // Mostrar mensaje de confirmación
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -149,9 +165,6 @@ class ParaclinicosWidget extends StatelessWidget {
             break;
           case 'Cloro':
             Provider.of<datosFormulario>(context, listen: false).cloro = numericValue;
-            break;
-          case 'Gases Arteriales':
-            Provider.of<datosFormulario>(context, listen: false).gasesArteriales = numericValue;
             break;
           default:
             break;

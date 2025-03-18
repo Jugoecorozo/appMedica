@@ -451,7 +451,7 @@ class _AntecedentesPersonalesWidgetState extends State<antecedentesPersonales> {
             child: Column(
               children: [
                 _buildList(anestesicos, _anestesicosSeleccionados,
-                    'Antecedentes Anestésicos', true),
+                    'Antecedentes Anestésicos', false),
                 const SizedBox(height: 8),
                  if (!_anestesicosSeleccionados.contains('No tiene antecedentes anestésicos')) ...[
                   const Text(

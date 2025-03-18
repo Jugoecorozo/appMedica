@@ -295,7 +295,7 @@ class _CapriniState extends State<Caprini> {
           },
         ),
         CheckboxListTile(
-          title: const Text('¿Edema de miembros pélvicos?'),
+          title: const Text('¿Edema de miembros inferiores?'),
           value: edemaPelvico,
           onChanged: (bool? value) {
             setState(() {

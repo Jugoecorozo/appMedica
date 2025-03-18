@@ -30,7 +30,7 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
       default:
         descripcion = '';
     }
-    String result = 'Grado $grado, $descripcion';
+    String result = grado == null ? 'No evaluable' : 'Grado $grado, $descripcion';
     widget.updateScaleValue('Escala de MALLAMPATI:', result);
   }
 
@@ -45,13 +45,14 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
         ),
         const SizedBox(height: 10),
         _buildDropdown('Grado', {
+          'No evaluable': null,
           'Grado I': 1,
           'Grado II': 2,
           'Grado III': 3,
           'Grado IV': 4,
         }, (value) {
           setState(() {
-            grado = value!;
+            grado = value;
             _updateValue();
           });
         }),
@@ -76,9 +77,7 @@ class _EscalaMallampatiState extends State<EscalaMallampati> {
             );
           }).toList(),
           onChanged: (value) {
-            if (value != null) {
-              onChanged(value); // Actualiza el valor seleccionado
-            }
+            onChanged(value); // Actualiza el valor seleccionado
           },
         ),
       ],
